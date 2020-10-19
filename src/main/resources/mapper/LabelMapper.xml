@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jin10.spidermanage.mapper.LabelMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jin10.spidermanage.dto.LabelDTO">
+        <id column="id" property="id"/>
+        <result column="label_name" property="labelName"/>
+        <result column="time_desc" property="timeDesc"/>
+        <result column="demand_desc" property="demandDesc"/>
+        <result column="spider_id" property="spiderId"/>
+        <result column="param" property="param"/>
+        <result column="cron" property="cron"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <collection property="img" ofType="com.jin10.spidermanage.dto.ImlUrlDTO"
+                    select="com.jin10.spidermanage.mapper.ImgUrlMapper.findByLabelId"
+                    column="id">
+        </collection>
+        <collection property="spiderLink"
+                    select="findLinkByLabelId"
+                    column="id">
+
+        </collection>
+    </resultMap>
+
+
+    <select id="findLabelByCategoryId" parameterType="_int" resultMap="BaseResultMap">
+
+        select * from label
+        where category_id = #{id}
+
+    </select>
+
+    <select id="getAll" resultMap="BaseResultMap">
+
+        select * from label;
+
+    </select>
+
+
+    <select id="findLinkByLabelId" parameterType="_int" resultType="java.lang.String">
+
+        select link from link
+        where label_id = #{id};
+
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+
+        select * from label
+        where id = #{id};
+
+    </select>
+
+    <insert id="addElement" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution) values
+        (#{body.categoryId},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution})
+
+    </insert>
+</mapper>

@@ -8,22 +8,21 @@
         <result column="category_name" property="category"/>
         <collection property="labels"
                     ofType="com.jin10.spidermanage.dto.LabelDTO"
-                    select="findLabelByCategoryId"
+                    select="com.jin10.spidermanage.mapper.LabelMapper.findLabelByCategoryId"
                     column="id">
         </collection>
 
     </resultMap>
 
+
     <select id="getAll" resultMap="BaseResultMap">
         select id, category_name from category;
     </select>
 
-    <select id="findLabelByCategoryId" parameterType="_int" resultType="com.jin10.spidermanage.dto.LabelDTO">
-        select id, label_name from label
-        where category_id = #{id}
+    <select id="getById" resultMap="BaseResultMap">
+        select * from category
+        where id = #{id}
     </select>
-
-
 
 
 </mapper>

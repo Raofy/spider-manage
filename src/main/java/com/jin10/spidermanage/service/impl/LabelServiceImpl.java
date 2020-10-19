@@ -2,6 +2,8 @@ package com.jin10.spidermanage.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jin10.spidermanage.bean.label.InsertBody;
+import com.jin10.spidermanage.dto.LabelDTO;
 import com.jin10.spidermanage.entity.Label;
 
 import com.jin10.spidermanage.mapper.LabelMapper;
@@ -18,13 +20,13 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     private LabelMapper labelMapper;
 
     @Override
-    public int add(Integer cid, String name) {
-        return labelMapper.insert(new Label().setLabelName(name).setCategoryId(cid));
+    public int add(InsertBody body) {
+        return labelMapper.addElement(body);
     }
 
     @Override
-    public List<Label> getAll() {
-        return labelMapper.selectList(null);
+    public List<LabelDTO> getAll() {
+        return labelMapper.getAll();
     }
 
     @Override
@@ -38,7 +40,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     }
 
     @Override
-    public Label getById(Integer id) {
-        return labelMapper.selectById(id);
+    public LabelDTO getById(Integer id) {
+        return labelMapper.getById(id);
     }
 }

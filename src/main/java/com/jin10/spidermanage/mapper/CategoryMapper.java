@@ -10,4 +10,6 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     List<CategoryDTO> getAll();
 
+    CategoryDTO getById(Integer id);
+
 }

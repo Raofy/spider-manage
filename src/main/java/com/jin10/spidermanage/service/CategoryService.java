@@ -16,7 +16,7 @@ public interface CategoryService extends IService<Category> {
 
     int update(Integer id, String newName);
 
-    Category getById(Integer id);
+    CategoryDTO getById(Integer id);
 
 
 }

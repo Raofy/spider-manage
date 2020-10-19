@@ -1,12 +1,9 @@
 package com.jin10.spidermanage.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jin10.spidermanage.dto.CategoryDTO;
 import com.jin10.spidermanage.entity.Category;
-import com.jin10.spidermanage.entity.Label;
 import com.jin10.spidermanage.mapper.CategoryMapper;
-import com.jin10.spidermanage.mapper.LabelMapper;
 import com.jin10.spidermanage.service.CategoryService;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +16,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Resource
     private CategoryMapper categoryMapper;
 
-    @Resource
-    private LabelMapper labelMapper;
-
 
     @Override
     public int add(String name) {
@@ -30,7 +24,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public int update(Integer id, String newName) {
-
         return categoryMapper.updateById(new Category().setId(id).setCategoryName(newName));
     }
 
@@ -45,7 +38,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public Category getById(Integer id) {
-        return categoryMapper.selectById(id);
+    public CategoryDTO getById(Integer id) {
+        return categoryMapper.getById(id);
     }
 }
