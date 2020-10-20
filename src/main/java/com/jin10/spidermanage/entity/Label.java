@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Date;
 
-import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 import static com.baomidou.mybatisplus.annotation.IdType.AUTO;
 
 @Data
@@ -64,7 +63,7 @@ public class Label implements Serializable {
     /**
      * 参数
      */
-    private Integer param;
+    private String param;
 
     /**
      * 时间表达式
@@ -75,7 +74,7 @@ public class Label implements Serializable {
      * 自动分配
      */
     @JsonProperty("auto_distribution")
-    private Byte autoDistribution;
+    private Integer autoDistribution;
 
     /**
      * 创建时间
@@ -92,8 +91,8 @@ public class Label implements Serializable {
     private Date updateTime;
 
     public Label(InsertBody insertBody) {
-        this.id = insertBody.getId();
-        this.categoryId = insertBody.getCategoryId();
+        this.id = insertBody.getLid();
+        this.categoryId = insertBody.getGid();
         this.labelName = insertBody.getLabelName();
         this.timeDesc = insertBody.getTimeDesc();
         this.demandDesc = insertBody.getDemandDesc();
@@ -102,4 +101,5 @@ public class Label implements Serializable {
         this.cron = insertBody.getCron();
         this.autoDistribution = insertBody.getAutoDistribution();
     }
+
 }

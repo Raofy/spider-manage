@@ -1,9 +1,9 @@
 package com.jin10.spidermanage.util;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,6 +107,24 @@ public class UploadFile {
         } else {
             return "上传失败，因为文件是空的.";
         }
+    }
+
+    /**
+     * 删除文件
+     * @param path
+     * @return
+     */
+    public static Boolean deleteFile(String path) {
+        if (!StringUtils.isEmpty(path)) {
+            String baseDest = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+            String filePath = baseDest + StringUtils.substringAfter(path, "8080");
+            File file = new File(filePath);
+            if (file.delete()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     /**

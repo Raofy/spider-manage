@@ -5,4 +5,12 @@
     <select id="findByLabelId" resultType="com.jin10.spidermanage.dto.ImlUrlDTO">
         select * from img_url where label_id = #{id};
     </select>
+
+    <delete id="deleteByColumns" parameterType="java.util.List">
+         delete from img_url
+        where label_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

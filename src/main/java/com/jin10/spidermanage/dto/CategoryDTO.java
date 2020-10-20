@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jin10.spidermanage.entity.Label;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryDTO implements Serializable {
 
-    private Integer id;
+
+    private Integer gid;
 
     private String category;
 

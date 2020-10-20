@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface LabelService extends IService<Label> {
 
-    int add(InsertBody body);
+    Boolean add(InsertBody body);
 
     List<LabelDTO> getAll();
 
-    int delete(Integer id);
+    boolean delete(Integer id);
 
-    int update(Integer id, String newName);
+    Boolean updateLabel(InsertBody body);
 
     LabelDTO getById(Integer id);
 

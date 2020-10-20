@@ -3,7 +3,7 @@
 <mapper namespace="com.jin10.spidermanage.mapper.LabelMapper">
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jin10.spidermanage.dto.LabelDTO">
-        <id column="id" property="id"/>
+        <id column="id" property="lid"/>
         <result column="label_name" property="labelName"/>
         <result column="time_desc" property="timeDesc"/>
         <result column="demand_desc" property="demandDesc"/>
@@ -54,7 +54,7 @@
 
     <insert id="addElement" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution) values
-        (#{body.categoryId},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution})
+        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution})
 
     </insert>
 </mapper>

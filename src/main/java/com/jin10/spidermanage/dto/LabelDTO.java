@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class LabelDTO implements Serializable {
 
-    private Integer id;
+    private Integer lid;
 
     @JsonProperty("label_name")
     private String labelName;
@@ -55,12 +55,18 @@ public class LabelDTO implements Serializable {
     /**
      * 参数
      */
-    private Integer param;
+    private String param;
 
     /**
      * 时间表达式
      */
     private String cron;
+
+    /**
+     * 自动分配
+     */
+    @JsonProperty("auto_distribution")
+    private Integer autoDistribution;
 
     /**
      * 创建时间

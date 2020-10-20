@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jin10.spidermanage.dto.CategoryDTO">
-        <id column="id" property="id"/>
+        <id column="id" property="gid"/>
         <result column="category_name" property="category"/>
         <collection property="labels"
                     ofType="com.jin10.spidermanage.dto.LabelDTO"

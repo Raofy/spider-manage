@@ -1,6 +1,7 @@
 package com.jin10.spidermanage.manage;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jin10.spidermanage.entity.ImgUrl;
 import org.springframework.stereotype.Component;
 
@@ -11,38 +12,37 @@ import java.util.Map;
 
 @Component
 public class ImgUrlCache {
-    private static Map<Integer, List<ImgUrl>> hmInstance = new HashMap<>();
+    private static Map<String, String> hmInstance = new HashMap<>();
 
     private ImgUrlCache() {
     }
 
-    public static Map<Integer, List<ImgUrl>> getInstance() {
-        return hmInstance;
+    private static class Holder {
+        static ImgUrlCache instance = new ImgUrlCache();
     }
 
-    public static Boolean addElement(ImgUrl element) {
-        if (!hmInstance.containsKey(element.getLabelId())) {
-            List<ImgUrl> flag = new ArrayList<>();
-            flag.add(element);
-            hmInstance.put(element.getLabelId(), flag);
-            return true;
-        }else {
-            hmInstance.get(element.getLabelId()).add(element);
-            return true;
-        }
+    public static ImgUrlCache getInstance() {
+        return ImgUrlCache.Holder.instance;
     }
 
-    public static Boolean delElement(ImgUrl element) {
-        if (ObjectUtils.isNotNull(element)) {
-            List<ImgUrl> imgUrls = hmInstance.get(element.getLabelId());
-            for (ImgUrl i: imgUrls) {
-                if (i.getUrl().equals(element.getUrl())) {
-                    return imgUrls.remove(i);
-                }
-            }
-            return false;
-        }
+    public synchronized Boolean addElement(String url) {
+        hmInstance.put(url, url);
+        return true;
+    }
 
+    public synchronized Boolean delElement(String url) {
+        if (StringUtils.isNotBlank(url)) {
+            hmInstance.remove(url);
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized Boolean updateElement(String url) {
+        if (StringUtils.isNotBlank(url)) {
+            this.addElement(url);
+            return true;
+        }
         return false;
     }
 

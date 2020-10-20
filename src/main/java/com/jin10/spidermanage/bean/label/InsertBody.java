@@ -10,12 +10,15 @@ import java.util.List;
 @Data
 public class InsertBody {
 
+    /**
+     * 组别id
+     */
+    private Integer gid;
 
-
-    @JsonProperty("category_id")
-    private Integer categoryId;
-
-    private Integer id;
+    /**
+     * 标签ID
+     */
+    private Integer lid;
 
     @JsonProperty("label_name")
     private String labelName;
@@ -36,12 +39,12 @@ public class InsertBody {
      * 爬虫链接
      */
     @JsonProperty("spider_link")
-    private List<Link> spiderLink;
+    private List<String> spiderLink;
 
     /**
      * 实例图片
      */
-    private List<ImgUrl> img;
+    private List<String> img;
 
     /**
      * 爬虫ID
@@ -53,12 +56,12 @@ public class InsertBody {
      * 自动分配
      */
     @JsonProperty("auto_distribution")
-    private Byte autoDistribution;
+    private Integer autoDistribution;
 
     /**
      * 参数
      */
-    private Integer param;
+    private String param;
 
     /**
      * 时间表达式
