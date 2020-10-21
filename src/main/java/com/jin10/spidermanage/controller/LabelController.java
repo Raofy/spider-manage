@@ -49,7 +49,7 @@ public class LabelController {
 
     @PostMapping("/update")
     public BaseResponse update(@RequestBody InsertBody body) {
-        return BaseResponse.ok(labelService.updateLabel(body));
+        return labelService.updateLabel(body);
     }
 
     @GetMapping("/delete/{id}")

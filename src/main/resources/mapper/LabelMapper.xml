@@ -23,12 +23,15 @@
         </collection>
     </resultMap>
 
+    <resultMap id="resultMap" type="com.jin10.spidermanage.dto.Label">
+        <id column="id" property="lid"></id>
+        <result column="label_name" property="labelName"></result>
+    </resultMap>
 
-    <select id="findLabelByCategoryId" parameterType="_int" resultMap="BaseResultMap">
 
-        select * from label
+    <select id="findLabelByCategoryId" parameterType="_int" resultMap="resultMap">
+        select id, label_name from label
         where category_id = #{id}
-
     </select>
 
     <select id="getAll" resultMap="BaseResultMap">
@@ -52,7 +55,7 @@
 
     </select>
 
-    <insert id="addElement" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="addElement" useGeneratedKeys="true" keyProperty="lid" keyColumn="id">
         insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution) values
         (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution})
 

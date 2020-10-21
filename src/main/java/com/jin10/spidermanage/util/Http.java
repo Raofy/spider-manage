@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.CommonResult;
+import com.jin10.spidermanage.bean.spider.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -31,7 +32,8 @@ public class Http {
         header.put("Content-Type", "application/json");
         String s = HttpClientUtils.doGetRequest(url, header, params);
         if (StringUtils.isNotBlank(s)) {
-            return JSONObject.toJavaObject(JSON.parseObject(s), BaseResponse.class);
+//            return JSONObject.toJavaObject(JSON.parseObject(s), BaseResponse.class);
+            return BaseResponse.ok(JSONObject.toJavaObject(JSON.parseObject(s), Request.class).getData());
         }
         return null;
     }

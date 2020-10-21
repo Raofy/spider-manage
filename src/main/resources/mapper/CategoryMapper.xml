@@ -7,9 +7,9 @@
         <id column="id" property="gid"/>
         <result column="category_name" property="category"/>
         <collection property="labels"
-                    ofType="com.jin10.spidermanage.dto.LabelDTO"
                     select="com.jin10.spidermanage.mapper.LabelMapper.findLabelByCategoryId"
                     column="id">
+
         </collection>
 
     </resultMap>

@@ -1,8 +1,8 @@
 package com.jin10.spidermanage.manage;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jin10.spidermanage.entity.ImgUrl;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,8 +25,8 @@ public class ImgUrlCache {
         return ImgUrlCache.Holder.instance;
     }
 
-    public synchronized Boolean addElement(String url) {
-        hmInstance.put(url, url);
+    public synchronized Boolean addElement(String url, String path) {
+        hmInstance.put(url, path);
         return true;
     }
 
@@ -38,13 +38,35 @@ public class ImgUrlCache {
         return false;
     }
 
-    public synchronized Boolean updateElement(String url) {
+    public synchronized Boolean isExit(String url) {
         if (StringUtils.isNotBlank(url)) {
-            this.addElement(url);
+            return hmInstance.containsKey(url);
+        }
+        return false;
+    }
+
+    public synchronized Boolean updateElement(String url, String path) {
+        if (StringUtils.isNotBlank(url)) {
+            this.addElement(url,path);
             return true;
         }
         return false;
     }
 
+    public synchronized String getElement(String key) {
+        if (StringUtils.isNotBlank(key)) {
+            return hmInstance.get(key);
+        }
+        return null;
+    }
 
+    public void print() {
+        for (Map.Entry<String, String> entry: hmInstance.entrySet()) {
+            System.out.println(entry.getKey()+" "+entry.getValue());
+        }
+    }
+
+    public Boolean isEmpty() {
+        return hmInstance.isEmpty();
+    }
 }

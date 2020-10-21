@@ -27,9 +27,17 @@ public class ImgUrl implements Serializable {
 
     private String url;
 
+    private String path;
+
 
     public ImgUrl(Integer id, String s) {
         this.labelId = id;
         this.url = s;
+    }
+
+    public ImgUrl(Integer id, String s, String path) {
+        this.labelId = id;
+        this.url = s;
+        this.path = path;
     }
 }
