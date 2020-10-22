@@ -100,7 +100,7 @@
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
-            <version>2.1.2</version>
+            <version>2.2.0</version>
         </dependency>
 
         <!--org.apache.commons.httpclient-->
@@ -109,6 +109,14 @@
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
 
     </dependencies>
 

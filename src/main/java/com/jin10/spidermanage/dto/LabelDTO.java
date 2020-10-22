@@ -1,9 +1,7 @@
 package com.jin10.spidermanage.dto;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.jin10.spidermanage.entity.Link;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,6 +65,17 @@ public class LabelDTO implements Serializable {
      */
     @JsonProperty("auto_distribution")
     private Integer autoDistribution;
+
+    /**
+     * 是否已经开启调度
+     */
+    private Integer open;
+
+    /**
+     * 执行器id
+     */
+    @JsonProperty("executor_id")
+    private int executorId;
 
     /**
      * 创建时间

@@ -1,18 +1,12 @@
 package com.jin10.spidermanage.bean.label;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.jin10.spidermanage.entity.ImgUrl;
-import com.jin10.spidermanage.entity.Link;
-import com.sun.javafx.logging.PulseLogger;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.security.PublicKey;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-public class InsertBody {
+public class InsertBodyTest {
 
     /**
      * 组别id
@@ -65,38 +59,10 @@ public class InsertBody {
     /**
      * 参数
      */
-    private String param;
+    private List<KV> param;
 
     /**
      * 时间表达式
      */
     private String cron;
-
-    /**
-     * 是否开启调度
-     * @param bodyTest
-     */
-    private int open;
-
-    /**
-     * 执行器id
-     */
-    @JsonProperty("executor_id")
-    private int executorId;
-
-
-
-
-    public InsertBody(InsertBodyTest bodyTest) {
-        this.gid = bodyTest.getGid();
-        this.lid = bodyTest.getLid();
-        this.labelName = bodyTest.getLabelName();
-        this.timeDesc = bodyTest.getTimeDesc();
-        this.demandDesc = bodyTest.getDemandDesc();
-        this.spiderLink = bodyTest.getSpiderLink();
-        this.img = bodyTest.getImg();
-        this.spiderId = bodyTest.getSpiderId();
-        this.autoDistribution = bodyTest.getAutoDistribution();
-        this.cron = bodyTest.getCron();
-    }
 }

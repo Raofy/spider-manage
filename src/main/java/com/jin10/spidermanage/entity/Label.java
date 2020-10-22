@@ -76,6 +76,11 @@ public class Label implements Serializable {
     @JsonProperty("auto_distribution")
     private Integer autoDistribution;
 
+    private int open;
+
+    @JsonProperty("executor_id")
+    private int executorId;
+
     /**
      * 创建时间
      */
@@ -90,6 +95,8 @@ public class Label implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:MM:ss",timezone = "GMT+8")
     private Date updateTime;
 
+
+
     public Label(InsertBody insertBody) {
         this.id = insertBody.getLid();
         this.categoryId = insertBody.getGid();
@@ -100,6 +107,8 @@ public class Label implements Serializable {
         this.param = insertBody.getParam();
         this.cron = insertBody.getCron();
         this.autoDistribution = insertBody.getAutoDistribution();
+        this.open = insertBody.getOpen();
+        this.executorId = insertBody.getExecutorId();
     }
 
 }

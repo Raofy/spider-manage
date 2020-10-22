@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.task;
 
+import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.util.Http;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -24,10 +26,14 @@ public class DemoJobHandler extends IJobHandler {
         /**
          * 请求接口
          */
-        Http.request(param, new HashMap<>());
-
-
-
+//        Map<String, String> params = new HashMap<>();
+//        params.put("spider", "jiachunwang.latest");
+//        params.put("msg", "山东");
+//        BaseResponse ok = BaseResponse.ok(Http.request("http://192.168.13.175:18888/test", params).getData());
+        logger.info("请求参数：" + param);
+//        BaseResponse request = Http.request(param);
+//        logger.info(""+request.getData());
+        Http.requestTest(param);
         // 打印日志
         logger.info("[execute][定时第 ({}) 次执行]", counts.incrementAndGet());
         // 返回执行成功

@@ -44,7 +44,7 @@ public class LabelController {
 
     @PostMapping("/add")
     public BaseResponse add(@RequestBody InsertBody body) {
-        return BaseResponse.ok(labelService.add(body));
+        return labelService.add(body);
     }
 
     @PostMapping("/update")
@@ -52,8 +52,8 @@ public class LabelController {
         return labelService.updateLabel(body);
     }
 
-    @GetMapping("/delete/{id}")
-    public BaseResponse delete(@PathVariable("id") Integer id) {
+    @GetMapping("/delete")
+    public BaseResponse delete(@PathVariable("lid") Integer id, @PathVariable("executorId") Integer eid) {
         return BaseResponse.ok(labelService.delete(id));
     }
 

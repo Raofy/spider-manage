@@ -32,9 +32,26 @@ public class Http {
         header.put("Content-Type", "application/json");
         String s = HttpClientUtils.doGetRequest(url, header, params);
         if (StringUtils.isNotBlank(s)) {
-//            return JSONObject.toJavaObject(JSON.parseObject(s), BaseResponse.class);
             return BaseResponse.ok(JSONObject.toJavaObject(JSON.parseObject(s), Request.class).getData());
         }
         return null;
+    }
+
+    public static BaseResponse request(String url) {
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/json");
+        String s = HttpClientUtils.doGetRequest(url, header, null);
+        if (StringUtils.isNotBlank(s)) {
+            return BaseResponse.ok(JSONObject.toJavaObject(JSON.parseObject(s), Request.class).getData());
+        }
+        return null;
+    }
+
+
+    public static void requestTest(String url) {
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/json");
+        String s = HttpClientUtils.doGetRequest(url, header, null);
+        System.out.println(s);
     }
 }

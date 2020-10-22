@@ -1,11 +1,9 @@
 package com.jin10.spidermanage.util;
 
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.jin10.spidermanage.manage.ImgUrlCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +34,7 @@ public class UploadFile {
                 if (!dir.isDirectory()) {
                     dir.mkdirs();
                 }
-                String fileName = MD5Util.MD5(originalFilename) + "." + StringUtils.substringAfter(originalFilename, ".");
+                String fileName = MD5Util.MD5(getFileNameNew()) + "." + StringUtils.substringAfter(originalFilename, ".");
                 File originalFile = new File(dir, fileName);
                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(originalFile));
                 bufferedOutputStream.write(file.getBytes());

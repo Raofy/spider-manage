@@ -28,7 +28,7 @@ public class XxlJobConfig {
         // 创建 XxlJobSpringExecutor 执行器
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
         xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
-        xxlJobSpringExecutor.setAppName(appName);
+        xxlJobSpringExecutor.setAppname(appName);
         xxlJobSpringExecutor.setIp(ip);
         xxlJobSpringExecutor.setPort(port);
         xxlJobSpringExecutor.setAccessToken(accessToken);

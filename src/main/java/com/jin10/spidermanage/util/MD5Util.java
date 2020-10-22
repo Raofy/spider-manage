@@ -1,10 +1,12 @@
 package com.jin10.spidermanage.util;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
+@Component
 public class MD5Util {
 
     static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};

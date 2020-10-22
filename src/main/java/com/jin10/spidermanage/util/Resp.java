@@ -1,9 +1,12 @@
 package com.jin10.spidermanage.util;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @program:
  * @description: 前端传递信息封装
  **/
+@Component
 public class Resp {
 
         /** 用于状态码 */
