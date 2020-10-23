@@ -78,6 +78,9 @@ public class Label implements Serializable {
 
     private int open;
 
+    @JsonProperty("task_id")
+    private int taskId;
+
     @JsonProperty("executor_id")
     private int executorId;
 
@@ -109,6 +112,7 @@ public class Label implements Serializable {
         this.autoDistribution = insertBody.getAutoDistribution();
         this.open = insertBody.getOpen();
         this.executorId = insertBody.getExecutorId();
+        this.taskId = insertBody.getTaskId();
     }
 
 }

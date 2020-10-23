@@ -21,6 +21,8 @@ public class LabelDTO implements Serializable {
     @JsonProperty("label_name")
     private String labelName;
 
+    private Integer gid;
+
     /**
      * 抓取时间描述
      */
@@ -72,8 +74,11 @@ public class LabelDTO implements Serializable {
     private Integer open;
 
     /**
-     * 执行器id
+     * 任务号id
      */
+    @JsonProperty("task_id")
+    private int taskId;
+
     @JsonProperty("executor_id")
     private int executorId;
 

@@ -1,8 +1,6 @@
 package com.jin10.spidermanage.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jin10.spidermanage.bean.spider.ExecutorList;
-import com.jin10.spidermanage.entity.Label;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,14 +11,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDTO implements Serializable {
+public class CategoryDTO1 implements Serializable {
 
 
-    private Integer gid;
+    private List<CategoryDTO> group;
 
-    private String category;
-
-    private List<LabelDTO> labels;
-
+    private List executors;
 
 }

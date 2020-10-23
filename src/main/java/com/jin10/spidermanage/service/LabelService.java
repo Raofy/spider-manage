@@ -13,7 +13,7 @@ public interface LabelService extends IService<Label> {
 
     BaseResponse add(InsertBody body);
 
-    BaseResponse add(InsertBodyTest body);
+    BaseResponse addKV(InsertBodyTest body);
 
     List<LabelDTO> getAll();
 

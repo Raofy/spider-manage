@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.bean.label;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jin10.spidermanage.entity.ImgUrl;
 import com.jin10.spidermanage.entity.Link;
@@ -84,6 +85,12 @@ public class InsertBody {
     @JsonProperty("executor_id")
     private int executorId;
 
+    /**
+     * 任务号ID
+     */
+    @JsonProperty("task_id")
+    private Integer taskId;
+
 
 
 
@@ -98,5 +105,6 @@ public class InsertBody {
         this.spiderId = bodyTest.getSpiderId();
         this.autoDistribution = bodyTest.getAutoDistribution();
         this.cron = bodyTest.getCron();
+
     }
 }

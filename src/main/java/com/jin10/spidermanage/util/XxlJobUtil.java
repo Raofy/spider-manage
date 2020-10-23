@@ -3,6 +3,8 @@ package com.jin10.spidermanage.util;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jin10.spidermanage.bean.spider.ExecutorList;
+import com.jin10.spidermanage.bean.spider.XxlJobResponse;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -24,6 +26,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -45,7 +48,7 @@ public class XxlJobUtil {
      * @throws HttpException
      * @throws IOException
      */
-    public static JSONObject addJob(String url, Map<String, String> mapdata) throws HttpException, IOException {
+    public static XxlJobResponse addJob(String url, Map<String, String> mapdata) throws HttpException, IOException {
         String path = "/jobinfo/add";
         String targetUrl = url + path;
         logger.info("请求地址：" + targetUrl);
@@ -70,7 +73,8 @@ public class XxlJobUtil {
         if (entity != null) {
             // 响应的结果
             String content = EntityUtils.toString(entity, "UTF-8");
-            return JSONObject.parseObject(content);
+            return JSONObject.parseObject(content, XxlJobResponse.class);
+
         }
         return null;
     }
@@ -115,7 +119,7 @@ public class XxlJobUtil {
         return result;
     }
 
-    public static JSONObject updateJob(String url, Map<String, String> mapdata) throws HttpException, IOException {
+    public static XxlJobResponse updateJob(String url, Map<String, String> mapdata) throws HttpException, IOException {
         String path = "/jobinfo/update";
         String targetUrl = url + path;
         logger.info("请求地址：" + targetUrl);
@@ -140,7 +144,7 @@ public class XxlJobUtil {
         if (entity != null) {
             // 响应的结果
             String content = EntityUtils.toString(entity, "UTF-8");
-            return JSONObject.parseObject(content);
+            return JSONObject.parseObject(content, XxlJobResponse.class);
         }
         return null;
     }
@@ -202,7 +206,7 @@ public class XxlJobUtil {
     }
 
 
-    public static JSONObject triggerJob(String url, Map<String, String> mapdata) throws IOException {
+    public static XxlJobResponse triggerJob(String url, Map<String, String> mapdata) throws IOException {
         String path = "/jobinfo/trigger";
         String targetUrl = url + path;
         logger.info("请求地址：" + targetUrl);
@@ -227,7 +231,7 @@ public class XxlJobUtil {
         if (entity != null) {
             // 响应的结果
             String content = EntityUtils.toString(entity, "UTF-8");
-            return JSONObject.parseObject(content);
+            return JSONObject.parseObject(content, XxlJobResponse.class);
         }
         return null;
     }
@@ -292,5 +296,63 @@ public class XxlJobUtil {
             }
         }
         return cookie;
+    }
+
+    /**
+     * 注册保存执行器
+     *
+     * @param url
+     * @param mapdata
+     * @throws IOException
+     */
+    public static void jobGroupSave(String url, Map<String, String> mapdata) throws IOException {
+        String path = "/jobgroup/save";
+        String targetUrl = url + path;
+        logger.info("请求地址：" + targetUrl);
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(targetUrl);
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        if (mapdata.size() != 0) {
+            // 将mapdata中的key存在set集合中，通过迭代器取出所有的key，再获取每一个键对应的值
+            Set keySet = mapdata.keySet();
+            Iterator it = keySet.iterator();
+            while (it.hasNext()) {
+                String k = it.next().toString();// key
+                Object v = mapdata.get(k);// value
+                nameValuePairs.add(new BasicNameValuePair(k, (String) v));
+            }
+        }
+        httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+        response = httpClient.execute(httpPost);
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            // 响应的结果
+            String content = EntityUtils.toString(entity, "UTF-8");
+            logger.info("添加执行器返回码：" + content);
+        }
+    }
+
+    public static ExecutorList executorList(String url) throws IOException {
+        String path = "/jobgroup/pageList";
+        String targetUrl = url + path;
+        logger.info("请求地址：" + targetUrl);
+
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(targetUrl);
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
+        response = httpClient.execute(httpPost);
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            // 响应的结果
+            String content = EntityUtils.toString(entity, "UTF-8");
+            logger.info("初始执行器列表"+content);
+            return JSONObject.parseObject(content, ExecutorList.class);
+        }
+
+        return null;
     }
 }

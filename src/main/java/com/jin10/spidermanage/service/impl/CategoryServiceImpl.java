@@ -1,13 +1,18 @@
 package com.jin10.spidermanage.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jin10.spidermanage.bean.spider.ExecutorList;
 import com.jin10.spidermanage.dto.CategoryDTO;
+import com.jin10.spidermanage.dto.CategoryDTO1;
 import com.jin10.spidermanage.entity.Category;
 import com.jin10.spidermanage.mapper.CategoryMapper;
 import com.jin10.spidermanage.service.CategoryService;
+import com.jin10.spidermanage.util.XxlJobUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -15,6 +20,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Resource
     private CategoryMapper categoryMapper;
+
+    @Value("${xxl.job.admin.addresses}")
+    private String adminAddresses;
 
 
     @Override
@@ -29,7 +37,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public List<CategoryDTO> getAll() {
+
         return categoryMapper.getAll();
+    }
+
+    @Override
+    public CategoryDTO1 getAllTest() {
+
+        try {
+            return new CategoryDTO1(categoryMapper.getAll(), XxlJobUtil.executorList(adminAddresses).getData());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

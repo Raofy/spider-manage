@@ -5,13 +5,15 @@
     <resultMap id="BaseResultMap" type="com.jin10.spidermanage.dto.LabelDTO">
         <id column="id" property="lid"/>
         <result column="label_name" property="labelName"/>
+        <result column="category_id" property="gid"/>
         <result column="time_desc" property="timeDesc"/>
         <result column="demand_desc" property="demandDesc"/>
         <result column="spider_id" property="spiderId"/>
         <result column="param" property="param"/>
         <result column="cron" property="cron"/>
         <result column="open" property="open"/>
-        <result column="exectuor_id" property="executorId"/>
+        <result column="task_id" property="taskId"/>
+        <result column="executor_id" property="executorId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <collection property="img" ofType="com.jin10.spidermanage.dto.ImlUrlDTO"
@@ -58,8 +60,8 @@
     </select>
 
     <insert id="addElement" useGeneratedKeys="true" keyProperty="lid" keyColumn="id">
-        insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution) values
-        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution})
+        insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution, executor_id) values
+        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution}, #{body.executorId})
 
     </insert><delete id="addEle">
 

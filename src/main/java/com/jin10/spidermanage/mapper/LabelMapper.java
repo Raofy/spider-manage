@@ -19,7 +19,7 @@ public interface LabelMapper extends BaseMapper<Label> {
 
     LabelDTO getById(Integer id);
 
-    int addElement(@Param("body")InsertBody body);
+    int addElement(@Param("body") InsertBody body);
 
     int addEle(@Param("body") InsertBodyTest body);
 }

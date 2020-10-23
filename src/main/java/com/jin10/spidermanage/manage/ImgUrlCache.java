@@ -22,7 +22,7 @@ public class ImgUrlCache {
     }
 
     public static ImgUrlCache getInstance() {
-        return ImgUrlCache.Holder.instance;
+        return Holder.instance;
     }
 
     public synchronized Boolean addElement(String url, String path) {

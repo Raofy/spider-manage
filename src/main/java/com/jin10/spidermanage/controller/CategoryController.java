@@ -31,7 +31,9 @@ public class CategoryController {
 
     @GetMapping("/all")
     public BaseResponse getAll() {
-        return BaseResponse.ok(categoryService.getAll());
+//        return BaseResponse.ok(categoryService.getAll());
+        return BaseResponse.ok(categoryService.getAllTest());
+
     }
 
     @GetMapping("/get/{gid}")

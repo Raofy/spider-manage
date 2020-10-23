@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 @Data
 public class Request implements Serializable {
+
     private int code;
     private String status;
     private Object data;

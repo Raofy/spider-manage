@@ -24,7 +24,10 @@ class SpiderManageApplicationTests {
 //        JSONObject jsonObject = XxlJobUtil.deleteJob(adminAddresses, 15);
 //        System.out.println(jsonObject);
 
-        Http.requestTest("http://baidu.com/");
+//        Http.requestTest("http://baidu.com/");
+
+
+        XxlJobUtil.executorList(adminAddresses);
     }
 
 }

@@ -1,9 +1,17 @@
 package com.jin10.spidermanage.config;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.jin10.spidermanage.bean.spider.ExecutorList;
+import com.jin10.spidermanage.util.XxlJobUtil;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Configuration
@@ -36,5 +44,31 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
         // 返回
         return xxlJobSpringExecutor;
+    }
+
+    @Bean
+    public void jobExecutorSave() throws IOException {
+        String admin = XxlJobUtil.login(adminAddresses, "admin", "123456");
+        ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
+        if (ObjectUtil.isNotNull(executorList)) {
+            List<ExecutorList.DataBean> data = executorList.getData();
+            int exit = 0;
+            for (int i = 0; i < data.size(); i++) {
+                if (appName.equals(data.get(i).getAppname())) {
+                    exit = 1;
+                }
+            }
+            if (exit == 0) {
+                Map<String, String> params = new HashMap<>();
+                params.put("appname", appName);
+                params.put("title", "爬虫执行器");
+                XxlJobUtil.jobGroupSave(adminAddresses, params);
+            }
+        }
+    }
+
+    @Bean
+    public void xxlJobLogin() throws IOException {
+
     }
 }
