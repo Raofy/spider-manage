@@ -52,6 +52,8 @@ public class Http {
         HashMap<String, String> header = new HashMap<>();
         header.put("Content-Type", "application/json");
         String s = HttpClientUtils.doGetRequest(url, header, null);
-        System.out.println(s);
+        if (StringUtils.isNotBlank(s)) {
+            System.out.println(s);
+        }
     }
 }

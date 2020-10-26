@@ -26,17 +26,14 @@ public class DemoJobHandler extends IJobHandler {
         /**
          * 请求接口
          */
-//        Map<String, String> params = new HashMap<>();
-//        params.put("spider", "jiachunwang.latest");
-//        params.put("msg", "山东");
-//        BaseResponse ok = BaseResponse.ok(Http.request("http://192.168.13.175:18888/test", params).getData());
         logger.info("请求参数：" + param);
-//        BaseResponse request = Http.request(param);
-//        logger.info(""+request.getData());
-        Http.requestTest(param);
+        BaseResponse request = Http.request(param);
+        System.out.println(request.getData());
         // 打印日志
         logger.info("[execute][定时第 ({}) 次执行]", counts.incrementAndGet());
         // 返回执行成功
-        return ReturnT.SUCCESS;
+        return new ReturnT(request.toString());
+
+
     }
 }

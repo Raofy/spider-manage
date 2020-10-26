@@ -1,8 +1,11 @@
 package com.jin10.spidermanage.util;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.spider.ExecutorList;
 import com.jin10.spidermanage.bean.spider.XxlJobResponse;
 import org.apache.commons.httpclient.Cookie;
@@ -13,14 +16,21 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -228,6 +238,7 @@ public class XxlJobUtil {
         httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
         response = httpClient.execute(httpPost);
         HttpEntity entity = response.getEntity();
+        //callback(url);
         if (entity != null) {
             // 响应的结果
             String content = EntityUtils.toString(entity, "UTF-8");
@@ -236,6 +247,23 @@ public class XxlJobUtil {
         return null;
     }
 
+    public static void callback(String url) throws IOException {
+        String path = "/api/callback";
+        String targetUrl = url + path;
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(targetUrl);
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        CloseableHttpResponse execute = httpClient.execute(httpPost);
+        response = httpClient.execute(httpPost);
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            // 响应的结果
+            String content = EntityUtils.toString(entity, "UTF-8");
+            logger.info("添加执行器返回码：" + content);
+        }
+
+    }
     public static JSONObject doGet(String url, String path) throws HttpException, IOException {
         String targetUrl = url + path;
         HttpClient httpClient = new HttpClient();
@@ -343,14 +371,22 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-        httpPost.addHeader("Cookie", cookie);
+//        httpPost.addHeader("Cookie", cookie);
         response = httpClient.execute(httpPost);
         HttpEntity entity = response.getEntity();
         if (entity != null) {
             // 响应的结果
             String content = EntityUtils.toString(entity, "UTF-8");
             logger.info("初始执行器列表"+content);
-            return JSONObject.parseObject(content, ExecutorList.class);
+            ExecutorList executorList = JSONObject.parseObject(content, ExecutorList.class);
+            Iterator<ExecutorList.DataBean> iterator = executorList.getData().iterator();
+            while (iterator.hasNext()) {
+                ExecutorList.DataBean next = iterator.next();
+                if (ObjectUtils.isNull(next.getAddressList())) {
+                    iterator.remove();
+                }
+            }
+            return executorList;
         }
 
         return null;

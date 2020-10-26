@@ -3,9 +3,11 @@ package com.jin10.spidermanage.bean;
 import com.jin10.spidermanage.enums.ResultCodeEnum;
 import lombok.Data;
 
+import java.io.Serializable;
+
 
 @Data
-public class BaseResponse {
+public class BaseResponse implements Serializable {
     private static final String DEFAULT_SUCCESS_MESSAGE = null;
     private static final String DEFAULT_ERROR_MESSAGE = "error";
 

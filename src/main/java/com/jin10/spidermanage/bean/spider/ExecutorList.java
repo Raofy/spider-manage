@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.bean.spider;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
+
 public class ExecutorList {
 
     /**
@@ -44,8 +46,8 @@ public class ExecutorList {
 //        @JsonProperty("address_type")
 //        private int addressType;
 //
-//        @JsonProperty("address_list")
-//        private Object addressList;
+        @JsonProperty("address_list")
+        private Object addressList;
 //
 //        @JsonProperty("registry_list")
 //        private Object registryList;
