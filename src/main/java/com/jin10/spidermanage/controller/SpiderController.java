@@ -57,7 +57,6 @@ public class SpiderController {
             params.put("executorParam", body.getParam());
             XxlJobResponse xxlJobResponse = XxlJobUtil.triggerJob(adminAddresses, params);
             if (xxlJobResponse.getCode() == 200) {
-
                 return BaseResponse.ok();
             }
         }

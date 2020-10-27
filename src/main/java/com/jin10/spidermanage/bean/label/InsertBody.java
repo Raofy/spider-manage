@@ -8,6 +8,7 @@ import com.sun.javafx.logging.PulseLogger;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.security.PublicKey;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class InsertBody {
     private Integer lid;
 
     @JsonProperty("label_name")
+    @NotBlank(message = "标签名不能为空")
     private String labelName;
 
     /**
@@ -66,11 +68,13 @@ public class InsertBody {
     /**
      * 参数
      */
+    @NotBlank(message = "参数不能为空")
     private String param;
 
     /**
      * 时间表达式
      */
+    @NotBlank(message = "时间表达式不能为空")
     private String cron;
 
     /**

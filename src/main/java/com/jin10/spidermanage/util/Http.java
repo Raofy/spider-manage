@@ -1,8 +1,10 @@
 package com.jin10.spidermanage.util;
 
 import cn.hutool.core.text.UnicodeUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.CommonResult;
 import com.jin10.spidermanage.bean.spider.Request;
@@ -42,7 +44,13 @@ public class Http {
         header.put("Content-Type", "application/json");
         String s = HttpClientUtils.doGetRequest(url, header, null);
         if (StringUtils.isNotBlank(s)) {
-            return BaseResponse.ok(JSONObject.toJavaObject(JSON.parseObject(s), Request.class).getData());
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = JSONObject.parseObject(s);
+            } catch (Exception e) {
+                return new BaseResponse(s);
+            }
+            return new BaseResponse(JSONObject.toJavaObject(JSON.parseObject(s), Request.class).getData());
         }
         return null;
     }

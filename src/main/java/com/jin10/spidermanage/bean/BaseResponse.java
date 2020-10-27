@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.bean;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.jin10.spidermanage.enums.ResultCodeEnum;
 import lombok.Data;
 
@@ -33,6 +34,12 @@ public class BaseResponse implements Serializable {
 
     public BaseResponse(ResultCodeEnum resultCodeEnum) {
         this(resultCodeEnum.getCode(), resultCodeEnum.getMessage());
+    }
+
+    public BaseResponse(Object data) {
+        this.status = 200;
+        this.message = "访问成功";
+        this.data = data;
     }
 
     public BaseResponse(ResultCodeEnum resultCodeEnum, Object data) {

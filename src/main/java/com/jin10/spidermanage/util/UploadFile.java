@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class UploadFile {
 
-    private static String baseUrl = "/home/software/web/spider-manage/data";
+    private static String baseUrl = "/home/software/web/spider-manager/data";
     private static String nginxPort = "8095";
 
     public static String saveImageFromByte(MultipartFile file, HttpServletRequest request) {

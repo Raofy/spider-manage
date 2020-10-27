@@ -17,8 +17,10 @@ import com.jin10.spidermanage.util.XxlJobUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.*;
@@ -36,12 +38,6 @@ public class LabelController {
     @Autowired
     private LabelService labelService;
 
-    @Autowired
-    private LinkService linkService;
-
-    @Autowired
-    private ImgUrlService imgUrlService;
-
     @GetMapping("/all")
     public BaseResponse getAll() {
         return BaseResponse.ok(labelService.getAll());
@@ -54,7 +50,11 @@ public class LabelController {
 
 
     @PostMapping("/add")
-    public BaseResponse add(@RequestBody InsertBody body) {
+    public BaseResponse add(@Valid @RequestBody InsertBody body, BindingResult result) {
+        if (result.hasErrors()) {
+            log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
+            return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
+        }
         if (RegularUtil.cron(body.getCron()) && RegularUtil.url(body.getParam())) {
             return labelService.add(body);
         }
@@ -62,7 +62,11 @@ public class LabelController {
     }
 
     @PostMapping("/update")
-    public BaseResponse update(@RequestBody InsertBody body) {
+    public BaseResponse update(@Valid @RequestBody InsertBody body, BindingResult result) {
+        if (result.hasErrors()) {
+            log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
+            return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
+        }
         if (RegularUtil.cron(body.getCron()) && RegularUtil.url(body.getParam())) {
             return labelService.updateLabel(body);
         }
