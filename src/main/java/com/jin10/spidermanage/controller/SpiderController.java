@@ -27,6 +27,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/spider")
+//@CrossOrigin(origins = {"*","null"},allowCredentials="true")
 public class SpiderController {
 
     @Value("${xxl.job.admin.addresses}")

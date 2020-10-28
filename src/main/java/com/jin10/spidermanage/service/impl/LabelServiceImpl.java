@@ -9,6 +9,7 @@ import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.label.InsertBody;
 import com.jin10.spidermanage.bean.label.InsertBodyTest;
 import com.jin10.spidermanage.bean.label.KV;
+import com.jin10.spidermanage.bean.label.Search;
 import com.jin10.spidermanage.bean.spider.XxlJobResponse;
 import com.jin10.spidermanage.dto.AddLabelDTO;
 import com.jin10.spidermanage.dto.LabelDTO;
@@ -148,7 +149,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
             } catch (Exception e) {
                 e.printStackTrace();
                 labelMapper.deleteById(body.getLid());        //数据库回退
-                return BaseResponse.error("添加成功但添加调度失败");
+                return BaseResponse.error("执行器ID不存在");
             }
             return BaseResponse.ok(labelMapper.getById(body.getLid()));
         }
@@ -322,5 +323,11 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     @Override
     public LabelDTO getById(Integer id) {
         return labelMapper.getById(id);
+    }
+
+    @Override
+    public List<Search> getLabelByCondition(String condition) {
+
+        return labelMapper.getByLabelLike(condition);
     }
 }

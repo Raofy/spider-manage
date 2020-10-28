@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.label.InsertBody;
 import com.jin10.spidermanage.bean.label.InsertBodyTest;
+import com.jin10.spidermanage.bean.label.Search;
 import com.jin10.spidermanage.dto.LabelDTO;
 import com.jin10.spidermanage.entity.Label;
 
@@ -22,6 +23,9 @@ public interface LabelService extends IService<Label> {
     BaseResponse updateLabel(InsertBody body);
 
     LabelDTO getById(Integer id);
+
+
+    List<Search> getLabelByCondition(String condition);
 
 
 

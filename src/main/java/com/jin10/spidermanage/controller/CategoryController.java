@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.entity.Category;
@@ -18,6 +19,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/group")
+//@CrossOrigin(origins = {"*","null"},allowCredentials="true")
 public class CategoryController {
 
     @Autowired
@@ -42,25 +44,22 @@ public class CategoryController {
     }
 
 
-    @PostMapping("/add")
-    public BaseResponse add(@RequestParam("category") String category) {
+    @GetMapping("/add")
+    public BaseResponse add(@RequestParam String category) {
         return BaseResponse.ok(categoryService.save(new Category().setCategoryName(category)));
     }
 
-    @PostMapping("/update")
+    @GetMapping("/update")
     public BaseResponse update(@RequestParam("gid") Integer id, @RequestParam("category") String category) {
         return BaseResponse.ok(categoryService.update(id, category));
     }
 
     @GetMapping("/delete/{gid}")
     public BaseResponse delete(@PathVariable("gid") Integer gid) {
-        QueryWrapper<Label> queryWrapper = new QueryWrapper<>();
-        Iterable<Label> labels = labelService.getBaseMapper().selectList(queryWrapper.select("id").eq("category_id", gid));
-        ArrayList<Integer> list = new ArrayList<>();
-        for (Label l: labels) {
-            list.add(l.getId());
+        if (ObjectUtil.isNotNull(gid)) {
+            return BaseResponse.ok(categoryService.delete(gid));
+        } else {
+            return BaseResponse.error(401, "参数为空");
         }
-        imgUrlService.delete(list);
-        return BaseResponse.ok(categoryService.delete(gid));
     }
 }

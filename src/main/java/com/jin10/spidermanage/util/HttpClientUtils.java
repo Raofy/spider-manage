@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.util;
 
+import org.apache.commons.httpclient.Cookie;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -7,6 +8,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -88,6 +90,54 @@ public class HttpClientUtils {
     }
 
     public static String doGetRequest(String url, Map<String, String> header, Map<String, String> params) {
+        String resultStr = "";
+        if (StringUtils.isEmpty(url)) {
+            return resultStr;
+        }
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse httpResponse = null;
+        try {
+            httpClient = SSLClientCustom.getHttpClinet();
+            //请求参数信息
+            if (params != null && !params.isEmpty()) {
+                url = url + buildUrl(params);
+            }
+            HttpGet httpGet = new HttpGet(url);
+            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(10000)//连接超时
+                    .setConnectionRequestTimeout(10000)//请求超时
+                    .setSocketTimeout(10000)//套接字连接超时
+                    .setRedirectsEnabled(true).build();//允许重定向
+            httpGet.setConfig(requestConfig);
+            if (header != null && !header.isEmpty()) {
+                for (Map.Entry<String, String> stringStringEntry : header.entrySet()) {
+                    httpGet.setHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
+                }
+            }
+            //发起请求
+            httpResponse = httpClient.execute(httpGet);
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+            if (statusCode == HttpStatus.SC_OK) {
+                resultStr = EntityUtils.toString(httpResponse.getEntity(), Consts.UTF_8);
+                logger.info("请求地址:{},响应结果:{}", url, resultStr);
+            } else {
+                StringBuffer stringBuffer = new StringBuffer();
+                HeaderIterator headerIterator = httpResponse.headerIterator();
+                while (headerIterator.hasNext()) {
+                    stringBuffer.append("\t" + headerIterator.next());
+                }
+                logger.info("异常信息:请求响应状态:{},请求返回结果:{}", httpResponse.getStatusLine().getStatusCode(), stringBuffer);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            HttpClientUtils.closeConnection(httpClient, httpResponse);
+        }
+        return resultStr;
+    }
+
+
+    public static String doGetRequest(String url, Map<String, String> header, Map<String, String> params, javax.servlet.http.Cookie[] cookies) {
         String resultStr = "";
         if (StringUtils.isEmpty(url)) {
             return resultStr;

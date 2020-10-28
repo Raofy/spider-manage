@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jin10.spidermanage.bean.label.InsertBody;
 import com.jin10.spidermanage.bean.label.InsertBodyTest;
+import com.jin10.spidermanage.bean.label.Search;
 import com.jin10.spidermanage.dto.LabelDTO;
 import com.jin10.spidermanage.entity.Category;
 import com.jin10.spidermanage.entity.Label;
@@ -22,4 +23,7 @@ public interface LabelMapper extends BaseMapper<Label> {
     int addElement(@Param("body") InsertBody body);
 
     int addEle(@Param("body") InsertBodyTest body);
+
+    List<Search> getByLabelLike(@Param("condition") String condition);
+
 }

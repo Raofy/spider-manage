@@ -1,26 +1,13 @@
 package com.jin10.spidermanage.util;
 
-import cn.hutool.core.text.UnicodeUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jin10.spidermanage.bean.BaseResponse;
-import com.jin10.spidermanage.bean.CommonResult;
 import com.jin10.spidermanage.bean.spider.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 

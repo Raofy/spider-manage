@@ -8,10 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +16,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/xxl-job")
+//@CrossOrigin(origins = {"*","null"},allowCredentials="true")
 public class XxlJobController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XxlJobController.class);
@@ -168,7 +166,7 @@ public class XxlJobController {
      * @param userName
      * @param password
      * @return
-     * @throws IOException
+     * @throws
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Resp login(String userName, String password) {

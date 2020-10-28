@@ -66,4 +66,9 @@
     </insert><delete id="addEle">
 
     </delete>
+
+    <select id="getByLabelLike" resultType="com.jin10.spidermanage.bean.label.Search">
+        select id, label_name, category_id from  label
+        where label_name LIKE CONCAT('%',#{condition},'%')
+    </select>
 </mapper>

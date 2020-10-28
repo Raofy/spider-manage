@@ -28,6 +28,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/label")
+//@CrossOrigin(origins = {"*","null"},allowCredentials="true")
 public class LabelController {
 
     @Value("${xxl.job.admin.addresses}")
@@ -94,7 +95,7 @@ public class LabelController {
      *
      * @return
      */
-    @GetMapping
+    @GetMapping("/executorList")
     public BaseResponse executorList() throws IOException {
         return BaseResponse.ok(XxlJobUtil.executorList(adminAddresses).getData());
     }
