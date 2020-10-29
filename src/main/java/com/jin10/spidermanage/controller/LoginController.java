@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 
 @RestController
@@ -16,7 +17,9 @@ import java.util.HashMap;
 public class LoginController {
 
     @GetMapping("/getUserInfo")
-    public BaseResponse getUserInfo(@RequestParam(value = "appName") String appName, @RequestParam(value = "expand", required = false) Integer expand, HttpServletRequest request) {
+    public BaseResponse getUserInfo(@RequestParam(value = "appName") String appName, @RequestParam(value = "expand", required = false) Integer expand, HttpServletRequest request, HttpServletResponse response) {
+        String origin = request.getHeader("Origin");
+        response.setHeader("Access-Control-Allow-Origin", origin);
         if (StringUtils.isNotBlank(appName)) {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
