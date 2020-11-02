@@ -1,23 +1,14 @@
 package com.jin10.spidermanage.controller;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.entity.Category;
-import com.jin10.spidermanage.entity.ImgUrl;
-import com.jin10.spidermanage.entity.Label;
-import com.jin10.spidermanage.mapper.CategoryMapper;
 import com.jin10.spidermanage.service.CategoryService;
-import com.jin10.spidermanage.service.ImgUrlService;
-import com.jin10.spidermanage.service.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
-import java.util.*;
 
 @RestController
 @RequestMapping("/group")
@@ -27,18 +18,11 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private LabelService labelService;
-
-    @Autowired
-    private ImgUrlService imgUrlService;
-
     @GetMapping("/all")
     public BaseResponse getAll(HttpServletRequest request, HttpServletResponse response) {
-//        return BaseResponse.ok(categoryService.getAll());
         String origin = request.getHeader("Origin");
         response.setHeader("Access-Control-Allow-Origin", origin);
-        return BaseResponse.ok(categoryService.getAllTest());
+        return BaseResponse.ok(categoryService.getAll());
 
     }
 

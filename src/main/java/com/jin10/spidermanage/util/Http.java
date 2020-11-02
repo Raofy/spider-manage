@@ -41,14 +41,4 @@ public class Http {
         }
         return null;
     }
-
-
-    public static void requestTest(String url) {
-        HashMap<String, String> header = new HashMap<>();
-        header.put("Content-Type", "application/json");
-        String s = HttpClientUtils.doGetRequest(url, header, null);
-        if (StringUtils.isNotBlank(s)) {
-            System.out.println(s);
-        }
-    }
 }

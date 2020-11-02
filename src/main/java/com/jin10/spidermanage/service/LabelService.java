@@ -5,7 +5,7 @@ import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.label.InsertBody;
 import com.jin10.spidermanage.bean.label.InsertBodyTest;
 import com.jin10.spidermanage.bean.label.Search;
-import com.jin10.spidermanage.dto.LabelDTO;
+import com.jin10.spidermanage.vo.LabelVO;
 import com.jin10.spidermanage.entity.Label;
 
 import java.util.List;
@@ -16,13 +16,13 @@ public interface LabelService extends IService<Label> {
 
     BaseResponse addKV(InsertBodyTest body);
 
-    List<LabelDTO> getAll();
+    List<LabelVO> getAll();
 
     boolean delete(Integer id, Integer eid);
 
     BaseResponse updateLabel(InsertBody body);
 
-    LabelDTO getById(Integer id);
+    LabelVO getById(Integer id);
 
 
     List<Search> getLabelByCondition(String condition);

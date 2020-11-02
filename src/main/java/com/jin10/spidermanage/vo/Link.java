@@ -1,8 +1,8 @@
-package com.jin10.spidermanage.dto;
+package com.jin10.spidermanage.vo;
 
 import java.io.Serializable;
 
-public class LinkDTO implements Serializable {
+public class Link implements Serializable {
     /**
      * 链接
      */

@@ -68,12 +68,11 @@ public class XxlJobUtil {
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         if (mapdata.size() != 0) {
-            // 将mapdata中的key存在set集合中，通过迭代器取出所有的key，再获取每一个键对应的值
             Set keySet = mapdata.keySet();
             Iterator it = keySet.iterator();
             while (it.hasNext()) {
                 String k = it.next().toString();// key
-                Object v = mapdata.get(k);// value
+                Object v = mapdata.get(k);      // value
                 nameValuePairs.add(new BasicNameValuePair(k, (String) v));
             }
         }
@@ -84,7 +83,6 @@ public class XxlJobUtil {
             // 响应的结果
             String content = EntityUtils.toString(entity, "UTF-8");
             return JSONObject.parseObject(content, XxlJobResponse.class);
-
         }
         return null;
     }

@@ -1,13 +1,10 @@
 package com.jin10.spidermanage.manage;
 
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.jin10.spidermanage.entity.ImgUrl;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component

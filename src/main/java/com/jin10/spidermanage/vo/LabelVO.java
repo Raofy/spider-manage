@@ -1,4 +1,4 @@
-package com.jin10.spidermanage.dto;
+package com.jin10.spidermanage.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LabelDTO implements Serializable {
+public class LabelVO implements Serializable {
 
     private Integer lid;
 
@@ -44,7 +44,7 @@ public class LabelDTO implements Serializable {
     /**
      * 实例图片路径
      */
-    private List<ImlUrlDTO> img;
+    private List<ImlUrl> img;
 
     /**
      * 爬虫ID

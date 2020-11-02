@@ -1,8 +1,8 @@
 
 spring:
   profiles:
-#    active: local
-    active: dev
+    active: local
+#    active: dev
 #    active: prod
 #spring:
 #  datasource:

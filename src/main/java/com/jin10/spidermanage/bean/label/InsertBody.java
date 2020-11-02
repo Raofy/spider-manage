@@ -2,6 +2,8 @@ package com.jin10.spidermanage.bean.label;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jin10.spidermanage.annotation.valid.Cron;
+import com.jin10.spidermanage.annotation.valid.URL;
 import com.jin10.spidermanage.entity.ImgUrl;
 import com.jin10.spidermanage.entity.Link;
 import com.sun.javafx.logging.PulseLogger;
@@ -69,12 +71,13 @@ public class InsertBody {
      * 参数
      */
     @NotBlank(message = "参数不能为空")
+    @URL
     private String param;
 
     /**
      * 时间表达式
      */
-    @NotBlank(message = "时间表达式不能为空")
+    @Cron
     private String cron;
 
     /**

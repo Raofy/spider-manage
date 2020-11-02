@@ -23,8 +23,6 @@ public class ImgUrlServiceImpl extends ServiceImpl<ImgUrlMapper, ImgUrl> impleme
 
     @Override
     public int delete(List<Integer> list) {
-
-
         return imgUrlMapper.deleteByColumns(list);
     }
 }

@@ -2,10 +2,8 @@ package com.jin10.spidermanage.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.jin10.spidermanage.bean.spider.ExecutorList;
-import com.jin10.spidermanage.dto.CategoryDTO;
-import com.jin10.spidermanage.dto.CategoryDTO1;
-import com.jin10.spidermanage.entity.Category;
+import com.jin10.spidermanage.vo.Category;
+import com.jin10.spidermanage.vo.CategoryList;
 import com.jin10.spidermanage.entity.Label;
 import com.jin10.spidermanage.mapper.CategoryMapper;
 import com.jin10.spidermanage.service.CategoryService;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
+public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, com.jin10.spidermanage.entity.Category> implements CategoryService {
 
     @Resource
     private CategoryMapper categoryMapper;
@@ -37,28 +35,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Value("${xxl.job.admin.addresses}")
     private String adminAddresses;
 
-
-    @Override
-    public int add(String name) {
-        return categoryMapper.insert(new Category().setCategoryName(name));
-    }
-
     @Override
     public int update(Integer id, String newName) {
-        return categoryMapper.updateById(new Category().setId(id).setCategoryName(newName));
+        return categoryMapper.updateById(new com.jin10.spidermanage.entity.Category().setId(id).setCategoryName(newName));
     }
 
-    @Override
-    public List<CategoryDTO> getAll() {
-
-        return categoryMapper.getAll();
-    }
 
     @Override
-    public CategoryDTO1 getAllTest() {
-
+    public CategoryList getAll() {
         try {
-            return new CategoryDTO1(categoryMapper.getAll(), XxlJobUtil.executorList(adminAddresses).getData());
+            return new CategoryList(categoryMapper.getAll(), XxlJobUtil.executorList(adminAddresses).getData());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +67,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public CategoryDTO getById(Integer id) {
+    public Category getById(Integer id) {
         return categoryMapper.getById(id);
     }
 }

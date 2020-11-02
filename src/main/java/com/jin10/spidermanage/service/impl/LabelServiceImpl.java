@@ -11,8 +11,8 @@ import com.jin10.spidermanage.bean.label.InsertBodyTest;
 import com.jin10.spidermanage.bean.label.KV;
 import com.jin10.spidermanage.bean.label.Search;
 import com.jin10.spidermanage.bean.spider.XxlJobResponse;
-import com.jin10.spidermanage.dto.AddLabelDTO;
-import com.jin10.spidermanage.dto.LabelDTO;
+import com.jin10.spidermanage.vo.AddLabel;
+import com.jin10.spidermanage.vo.LabelVO;
 import com.jin10.spidermanage.entity.ImgUrl;
 import com.jin10.spidermanage.entity.Label;
 
@@ -22,7 +22,6 @@ import com.jin10.spidermanage.mapper.LabelMapper;
 import com.jin10.spidermanage.service.ImgUrlService;
 import com.jin10.spidermanage.service.LabelService;
 import com.jin10.spidermanage.service.LinkService;
-import com.jin10.spidermanage.util.RegularUtil;
 import com.jin10.spidermanage.util.UploadFile;
 import com.jin10.spidermanage.util.XxlJobUtil;
 import org.apache.commons.lang.StringUtils;
@@ -107,6 +106,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                 requestInfo.put("jobCron", body.getCron());
 
                 // 任务描述
+
                 requestInfo.put("jobDesc", body.getDemandDesc());
 
                 // 负责人
@@ -144,12 +144,12 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     lambdaUpdateWrapper.eq(Label::getId, body.getLid()).set(Label::getTaskId, body.getExecutorId());
                     baseMapper.update(null, lambdaUpdateWrapper);
                 } else {
-                    throw new Exception("调用xxl-job-admin-add接口失败！");
+                    throw new Exception(""+xxlJobResponse.getMsg());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 labelMapper.deleteById(body.getLid());        //数据库回退
-                return BaseResponse.error("执行器ID不存在");
+                return BaseResponse.error(e.getMessage());
             }
             return BaseResponse.ok(labelMapper.getById(body.getLid()));
         }
@@ -199,7 +199,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
             }
             if (link && img) {                                 //添加记录成功
 
-                return BaseResponse.ok(new AddLabelDTO(body.getGid(), body.getLid()));
+                return BaseResponse.ok(new AddLabel(body.getGid(), body.getLid()));
             }
             return BaseResponse.error("添加失败");
         }
@@ -207,7 +207,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     }
 
     @Override
-    public List<LabelDTO> getAll() {
+    public List<LabelVO> getAll() {
         return labelMapper.getAll();
     }
 
@@ -321,7 +321,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
 
 
     @Override
-    public LabelDTO getById(Integer id) {
+    public LabelVO getById(Integer id) {
         return labelMapper.getById(id);
     }
 

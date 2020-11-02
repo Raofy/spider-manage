@@ -3,7 +3,7 @@
 <mapper namespace="com.jin10.spidermanage.mapper.CategoryMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.jin10.spidermanage.dto.CategoryDTO">
+    <resultMap id="BaseResultMap" type="com.jin10.spidermanage.vo.Category">
         <id column="id" property="gid"/>
         <result column="category_name" property="category"/>
         <collection property="labels"

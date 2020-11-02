@@ -1,15 +1,14 @@
 package com.jin10.spidermanage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.jin10.spidermanage.dto.CategoryDTO;
-import com.jin10.spidermanage.entity.Category;
+import com.jin10.spidermanage.vo.Category;
 
 import java.util.List;
 
-public interface CategoryMapper extends BaseMapper<Category> {
+public interface CategoryMapper extends BaseMapper<com.jin10.spidermanage.entity.Category> {
 
-    List<CategoryDTO> getAll();
+    List<Category> getAll();
 
-    CategoryDTO getById(Integer id);
+    Category getById(Integer id);
 
 }

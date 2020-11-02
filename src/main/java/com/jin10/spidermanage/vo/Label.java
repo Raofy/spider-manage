@@ -1,4 +1,4 @@
-package com.jin10.spidermanage.dto;
+package com.jin10.spidermanage.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

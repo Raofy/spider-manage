@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,7 +53,7 @@ public class LabelController {
 
 
     @PostMapping("/add")
-    public BaseResponse add(@Valid @RequestBody InsertBody body, BindingResult result) {
+    public BaseResponse add(@Validated @RequestBody InsertBody body, BindingResult result) {
         if (result.hasErrors()) {
             log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());

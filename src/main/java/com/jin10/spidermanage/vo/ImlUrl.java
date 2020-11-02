@@ -1,4 +1,4 @@
-package com.jin10.spidermanage.dto;
+package com.jin10.spidermanage.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImlUrlDTO implements Serializable {
+public class ImlUrl implements Serializable {
 
     private Integer id;
 
