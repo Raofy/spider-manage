@@ -1,5 +1,6 @@
 package com.jin10.spidermanage.config;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.jin10.spidermanage.bean.spider.ExecutorList;
 import com.jin10.spidermanage.util.XxlJobUtil;
@@ -56,9 +57,11 @@ public class XxlJobConfig {
         if (ObjectUtil.isNotNull(executorList)) {
             List<ExecutorList.DataBean> data = executorList.getData();
             int exit = 0;
-            for (int i = 0; i < data.size(); i++) {
-                if (appName.equals(data.get(i).getAppname())) {
-                    exit = 1;
+            if (CollUtil.isNotEmpty(data)) {
+                for (int i = 0; i < data.size(); i++) {
+                    if (appName.equals(data.get(i).getAppname())) {
+                        exit = 1;
+                    }
                 }
             }
             if (exit == 0) {

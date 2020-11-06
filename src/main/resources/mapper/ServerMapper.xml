@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jin10.spidermanage.mapper.ServerMapper">
+    <!-- 通用查询映射结果 -->
+
+    <select id="findById" resultType="com.jin10.spidermanage.vo.ServerVO">
+        select id as server_id, concat(server_name,"(",server_ip,")")as serverName from server where id = #{server_id}
+    </select>
+
+     <select id="getAll" resultType="com.jin10.spidermanage.vo.ServerVO">
+        select id as server_id, concat(server_name,"(",server_ip,")") as server from server
+    </select>
+
+
+
+</mapper>

@@ -71,7 +71,6 @@ public class InsertBody {
      * 参数
      */
     @NotBlank(message = "参数不能为空")
-    @URL
     private String param;
 
     /**
@@ -97,6 +96,12 @@ public class InsertBody {
      */
     @JsonProperty("task_id")
     private Integer taskId;
+
+    /**
+     * 服务器id
+     */
+    @JsonProperty("server_id")
+    private Integer serverId;
 
 
 

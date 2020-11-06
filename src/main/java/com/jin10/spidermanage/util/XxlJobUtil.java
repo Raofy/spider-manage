@@ -380,13 +380,12 @@ public class XxlJobUtil {
             Iterator<ExecutorList.DataBean> iterator = executorList.getData().iterator();
             while (iterator.hasNext()) {
                 ExecutorList.DataBean next = iterator.next();
-                if (ObjectUtils.isNull(next.getAddressList())) {
+                if (ObjectUtils.isNull(next.getAddressList())) {         //将地址为null的数据剔除掉
                     iterator.remove();
                 }
             }
             return executorList;
         }
-
         return null;
     }
 }

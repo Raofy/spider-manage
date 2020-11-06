@@ -16,6 +16,9 @@
         <result column="executor_id" property="executorId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
+        <association property="server" javaType="com.jin10.spidermanage.vo.ServerVO"
+          column="server_id" select="com.jin10.spidermanage.mapper.ServerMapper.findById">
+        </association>
         <collection property="img" ofType="com.jin10.spidermanage.vo.ImlUrl"
                     select="com.jin10.spidermanage.mapper.ImgUrlMapper.findByLabelId"
                     column="id">
@@ -60,8 +63,8 @@
     </select>
 
     <insert id="addElement" useGeneratedKeys="true" keyProperty="lid" keyColumn="id">
-        insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution, executor_id) values
-        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution}, #{body.executorId})
+        insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution, executor_id, server_id) values
+        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution}, #{body.executorId}, #{body.serverId})
 
     </insert><delete id="addEle">
 

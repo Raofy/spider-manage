@@ -96,5 +96,10 @@ public class LabelVO implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:MM:ss",timezone = "GMT+8")
     private Date updateTime;
 
+    /**
+     * 服务器信息
+     */
+    private ServerVO server;
+
 
 }

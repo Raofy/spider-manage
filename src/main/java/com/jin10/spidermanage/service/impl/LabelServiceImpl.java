@@ -11,6 +11,9 @@ import com.jin10.spidermanage.bean.label.InsertBodyTest;
 import com.jin10.spidermanage.bean.label.KV;
 import com.jin10.spidermanage.bean.label.Search;
 import com.jin10.spidermanage.bean.spider.XxlJobResponse;
+import com.jin10.spidermanage.entity.Server;
+import com.jin10.spidermanage.mapper.ServerMapper;
+import com.jin10.spidermanage.service.ServerService;
 import com.jin10.spidermanage.vo.AddLabel;
 import com.jin10.spidermanage.vo.LabelVO;
 import com.jin10.spidermanage.entity.ImgUrl;
@@ -55,6 +58,9 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
 
     @Autowired
     private ImgUrlService imgUrlService;
+
+    @Autowired
+    private ServerService serverService;
 
     @Override
     @Transactional
@@ -119,7 +125,15 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                 requestInfo.put("executorHandler", "Job");
 
                 // todo 执行器，任务参数
-                requestInfo.put("executorParam", body.getParam());
+                QueryWrapper<Server> queryWrapper = new QueryWrapper<>();
+                Server server = serverService.getBaseMapper().selectOne(queryWrapper.eq("id", body.getServerId()));
+                if(StringUtils.isNotBlank(server.getPort())) {
+                    String url = String.format("http://%s:%s/fetch?%s",server.getServerIp(),server.getPort(),body.getParam());
+                    requestInfo.put("executorParam", url);
+                }else {
+                    String url = String.format("http://%s/fetch?%s",server.getServerIp(),body.getParam());
+                    requestInfo.put("executorParam", url);
+                }
 
                 // 阻塞处理策略
                 requestInfo.put("executorBlockStrategy", "SERIAL_EXECUTION");
@@ -264,7 +278,15 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
             // 执行器，任务Handler名称
             requestInfo.put("executorHandler", "Job");
             // todo 执行器，任务参数
-            requestInfo.put("executorParam", body.getParam());
+            QueryWrapper<Server> queryWrapper = new QueryWrapper<>();
+            Server server = serverService.getBaseMapper().selectOne(queryWrapper.eq("id", body.getServerId()));
+            if(StringUtils.isNotBlank(server.getPort())) {
+                String url = String.format("http://%s:%s/fetch?%s",server.getServerIp(),server.getPort(),body.getParam());
+                requestInfo.put("executorParam", url);
+            }else {
+                String url = String.format("http://%s/fetch?%s",server.getServerIp(),body.getParam());
+                requestInfo.put("executorParam", url);
+            }
             // 阻塞处理策略
             requestInfo.put("executorBlockStrategy", "SERIAL_EXECUTION");
             // 任务执行超时时间，单位秒

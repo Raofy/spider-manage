@@ -84,6 +84,9 @@ public class Label implements Serializable {
     @JsonProperty("executor_id")
     private int executorId;
 
+    @JsonProperty("server_id")
+    private int serverId;
+
     /**
      * 创建时间
      */
@@ -113,6 +116,7 @@ public class Label implements Serializable {
         this.open = insertBody.getOpen();
         this.executorId = insertBody.getExecutorId();
         this.taskId = insertBody.getTaskId();
+        this.serverId = insertBody.getServerId();
     }
 
 }

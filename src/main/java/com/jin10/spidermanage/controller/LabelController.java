@@ -58,10 +58,7 @@ public class LabelController {
             log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        if (RegularUtil.cron(body.getCron()) && RegularUtil.url(body.getParam())) {
-            return labelService.add(body);
-        }
-        return BaseResponse.error("cron表达式或者URL表达式不合法！！");
+        return labelService.add(body);
     }
 
     @PostMapping("/update")
@@ -70,10 +67,7 @@ public class LabelController {
             log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        if (RegularUtil.cron(body.getCron()) && RegularUtil.url(body.getParam())) {
-            return labelService.updateLabel(body);
-        }
-        return BaseResponse.error("cron表达式或者URL表达式不合法！！");
+        return labelService.updateLabel(body);
     }
 
     /**
@@ -101,5 +95,7 @@ public class LabelController {
     public BaseResponse executorList() throws IOException {
         return BaseResponse.ok(XxlJobUtil.executorList(adminAddresses).getData());
     }
+
+
 
 }
