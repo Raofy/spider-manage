@@ -88,8 +88,8 @@ public class SpiderServiceImpl implements SpiderService {
             LambdaUpdateWrapper<Label> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
             if (taskId > 0) {
                 if (open == 1) {
-                    JSONObject response = XxlJobUtil.startJob(adminAddresses, taskId);
-                    if (response.containsKey("code") && 200 == (Integer) response.get("code")) {
+                    XxlJobResponse response = XxlJobUtil.startJob(adminAddresses, taskId);
+                    if (response.getCode() == 200) {
                         lambdaUpdateWrapper.eq(Label::getId, lid).set(Label::getOpen, 0);
                         Integer rows = labelService.getBaseMapper().update(null, lambdaUpdateWrapper);
                         return BaseResponse.ok(labelService.getById(lid));
@@ -97,8 +97,8 @@ public class SpiderServiceImpl implements SpiderService {
                     lambdaUpdateWrapper.eq(Label::getId, lid).set(Label::getOpen, 1);
                     labelService.getBaseMapper().update(null, lambdaUpdateWrapper);
                 } else {
-                    JSONObject response = XxlJobUtil.stopJob(adminAddresses, taskId);
-                    if (response.containsKey("code") && 200 == (Integer) response.get("code")) {
+                    XxlJobResponse response = XxlJobUtil.stopJob(adminAddresses, taskId);
+                    if (response.getCode() == 200) {
                         lambdaUpdateWrapper.eq(Label::getId, lid).set(Label::getOpen, 1);
                         Integer rows = labelService.getBaseMapper().update(null, lambdaUpdateWrapper);
                         return BaseResponse.ok(labelService.getById(lid));

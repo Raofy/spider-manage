@@ -50,6 +50,80 @@ public class XxlJobUtil {
     private static String cookie = "";
 
     /**
+     * 添加调度执行器
+     *
+     * @return
+     */
+    public static XxlJobResponse addExecutor(String url, Map<String, String> mapData) throws IOException {
+        String path = "/jobgroup/save";
+        String targetUrl = url + path;
+        logger.info("请求地址：" + targetUrl);
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(targetUrl);
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        if (mapData.size() != 0) {
+            Set keySet = mapData.keySet();
+            Iterator it = keySet.iterator();
+            while (it.hasNext()) {
+                String k = it.next().toString();// key
+                Object v = mapData.get(k);      // value
+                nameValuePairs.add(new BasicNameValuePair(k, (String) v));
+            }
+        }
+        httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+        response = httpClient.execute(httpPost);
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            // 响应的结果
+            String content = EntityUtils.toString(entity, "UTF-8");
+            return JSONObject.parseObject(content, XxlJobResponse.class);
+        }
+        return null;
+    }
+
+    /**
+     * 更新调度执行器
+     *
+     * @return
+     */
+    public static XxlJobResponse updateExecutor(String url, Map<String, String> mapData) throws IOException {
+        String path = "/jobgroup/update";
+        String targetUrl = url + path;
+        logger.info("请求地址：" + targetUrl);
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(targetUrl);
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        if (mapData.size() != 0) {
+            Set keySet = mapData.keySet();
+            Iterator it = keySet.iterator();
+            while (it.hasNext()) {
+                String k = it.next().toString();// key
+                Object v = mapData.get(k);      // value
+                nameValuePairs.add(new BasicNameValuePair(k, (String) v));
+            }
+        }
+        httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+        response = httpClient.execute(httpPost);
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            // 响应的结果
+            String content = EntityUtils.toString(entity, "UTF-8");
+            return JSONObject.parseObject(content, XxlJobResponse.class);
+        }
+        return null;
+    }
+
+    public static XxlJobResponse deleteExecutor(String url, Long id) throws IOException {
+        String path = "/jobgroup/save";
+        return doGetRequest(url, path);
+
+    }
+
+    /**
      * 新增/编辑任务
      *
      * @param url
@@ -166,7 +240,7 @@ public class XxlJobUtil {
      * @throws HttpException
      * @throws IOException
      */
-    public static JSONObject deleteJob(String url, int id) throws HttpException, IOException {
+    public static JSONObject deleteJob(String url, Long id) throws HttpException, IOException {
         String path = "/jobinfo/remove?id=" + id;
         return doGet(url, path);
     }
@@ -180,10 +254,14 @@ public class XxlJobUtil {
      * @throws HttpException
      * @throws IOException
      */
-    public static JSONObject startJob(String url, int id) throws HttpException, IOException {
+    public static XxlJobResponse startJob(String url, int id) throws HttpException, IOException {
         String path = "/jobinfo/start?id=" + id;
-        return doGet(url, path);
+        XxlJobResponse response = doGetRequest(url, path);
+        logger.info("开启任务" + response.toString());
+        return response;
     }
+
+
 
     /**
      * 停止任务
@@ -194,9 +272,11 @@ public class XxlJobUtil {
      * @throws HttpException
      * @throws IOException
      */
-    public static JSONObject stopJob(String url, int id) throws HttpException, IOException {
+    public static XxlJobResponse stopJob(String url, int id) throws HttpException, IOException {
         String path = "/jobinfo/stop?id=" + id;
-        return doGet(url, path);
+        XxlJobResponse response = doGetRequest(url, path);
+        logger.info("停止任务" + response.toString());
+        return response;
     }
 
     /**
@@ -271,6 +351,38 @@ public class XxlJobUtil {
         JSONObject result = new JSONObject();
         result = getJsonObject(get, result);
         return result;
+    }
+
+    public static XxlJobResponse doGetRequest(String url, String path) throws HttpException, IOException {
+        String targetUrl = url + path;
+        HttpClient httpClient = new HttpClient();
+        HttpMethod get = new GetMethod(targetUrl);
+        get.setRequestHeader("cookie", cookie);
+        httpClient.executeMethod(get);
+        InputStream inputStream = get.getResponseBodyAsStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuffer stringBuffer = new StringBuffer();
+        XxlJobResponse response = new XxlJobResponse();
+        String str = "";
+        while ((str = br.readLine()) != null) {
+            stringBuffer.append(str);
+        }
+        if (get.getStatusCode() == 200) {
+            /**
+             *  使用此方式会出现
+             *  Going to buffer response body of large or unknown size. Using getResponseBodyAsStream instead is recommended.
+             *  异常
+             *  String responseBodyAsString = get.getResponseBodyAsString();
+             *  result = JSONObject.parseObject(responseBodyAsString);*/
+            response = JSONObject.parseObject(stringBuffer.toString(), XxlJobResponse.class);
+        } else {
+            try {
+                response = JSONObject.parseObject(stringBuffer.toString(), XxlJobResponse.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return response;
     }
 
     private static JSONObject getJsonObject(HttpMethod get, JSONObject result) throws IOException {

@@ -3,6 +3,7 @@ package com.jin10.spidermanage.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.jin10.spidermanage.bean.label.InsertBody;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -76,16 +77,45 @@ public class Label implements Serializable {
     @JsonProperty("auto_distribution")
     private Integer autoDistribution;
 
+    /**
+     * 开关标志位
+     */
     private int open;
 
+
+    /**
+     * 调度任务ID
+     */
     @JsonProperty("task_id")
     private int taskId;
 
+    /**
+     * URL路径
+     */
+    private String path;
+
+    /**
+     * 执行器ID
+     */
     @JsonProperty("executor_id")
     private int executorId;
 
+    /**
+     * 服务器ID
+     */
     @JsonProperty("server_id")
     private int serverId;
+
+    /**
+     * 创建者ID
+     */
+    private long creatorId;
+
+
+    /**
+     * 更新者ID
+     */
+    private long updaterId;
 
     /**
      * 创建时间
@@ -117,6 +147,9 @@ public class Label implements Serializable {
         this.executorId = insertBody.getExecutorId();
         this.taskId = insertBody.getTaskId();
         this.serverId = insertBody.getServerId();
+        this.path = insertBody.getPath();
+        this.creatorId = insertBody.getCreatorId();
+        this.updaterId = insertBody.getUpdaterId();
     }
 
 }

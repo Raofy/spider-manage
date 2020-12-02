@@ -18,8 +18,6 @@ public interface LabelMapper extends BaseMapper<Label> {
 
     int addElement(@Param("body") InsertBody body);
 
-    int addEle(@Param("body") InsertBodyTest body);
-
     List<Search> getByLabelLike(@Param("condition") String condition);
 
 }

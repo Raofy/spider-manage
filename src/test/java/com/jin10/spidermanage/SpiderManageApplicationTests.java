@@ -1,6 +1,7 @@
 package com.jin10.spidermanage;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jin10.spidermanage.util.DingTalk;
 import com.jin10.spidermanage.util.Http;
 import com.jin10.spidermanage.util.XxlJobUtil;
 import org.junit.jupiter.api.Test;
@@ -8,9 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 class SpiderManageApplicationTests {
@@ -90,5 +89,12 @@ class SpiderManageApplicationTests {
         }
 
         StringBuffer stringBuffer = new StringBuffer();
+    }
+
+    @Test
+    void dingTalkTest() {
+//        List<String> members = new ArrayList();
+//        members.add("17865313385");
+//        DingTalk.ding("测试钉钉告警", members);
     }
 }

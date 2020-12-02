@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jin10.spidermanage.mapper.UserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jin10.spidermanage.vo.LabelVO">
+
+    </resultMap>
+
+    <select id="findById" resultType="java.lang.String">
+       select name from user where id = #{id}
+    </select>
+
+    <insert id="addElement" useGeneratedKeys="true" keyProperty="id" >
+       insert into user (name, iphone) values (#{user.name}, #{user.iphone})
+    </insert>
+
+    <update id="updateElement" useGeneratedKeys="true" keyProperty="id">
+        update user set name = #{user.name}, iphone = #{user.iphone} where id = #{user.id}
+    </update>
+
+</mapper>

@@ -8,17 +8,16 @@ import com.jin10.spidermanage.bean.label.Search;
 import com.jin10.spidermanage.vo.LabelVO;
 import com.jin10.spidermanage.entity.Label;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface LabelService extends IService<Label> {
 
-    BaseResponse add(InsertBody body);
-
-    BaseResponse addKV(InsertBodyTest body);
+    BaseResponse add(InsertBody body) throws IOException;
 
     List<LabelVO> getAll();
 
-    boolean delete(Integer id, Integer eid);
+    boolean delete(Integer id, Long eid);
 
     BaseResponse updateLabel(InsertBody body);
 

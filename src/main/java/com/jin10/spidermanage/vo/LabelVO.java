@@ -83,6 +83,46 @@ public class LabelVO implements Serializable {
     private int executorId;
 
     /**
+     * 服务器信息
+     */
+    private ServerVO server;
+
+    /**
+     * URL 路径
+     */
+    private String path;
+
+    /**
+     * 创建者
+     */
+    private String creator;
+
+
+    /**
+     * 更新者
+     */
+    private String updater;
+
+//    /**
+//     * 手机号
+//     */
+//    private String iPhone;
+
+    /**
+     * 创建者id
+     *
+     */
+    @JsonProperty("creator_id")
+    private long creatorId;
+
+    /**
+     * 更新者id
+     *
+     */
+    @JsonProperty("updater_id")
+    private long updaterId;
+
+    /**
      * 创建时间
      */
     @JsonProperty("create_time")
@@ -96,10 +136,7 @@ public class LabelVO implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:MM:ss",timezone = "GMT+8")
     private Date updateTime;
 
-    /**
-     * 服务器信息
-     */
-    private ServerVO server;
+
 
 
 }

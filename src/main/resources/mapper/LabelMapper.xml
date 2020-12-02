@@ -14,8 +14,17 @@
         <result column="open" property="open"/>
         <result column="task_id" property="taskId"/>
         <result column="executor_id" property="executorId"/>
+        <result column="path" property="path"/>
+        <result column="creator_id" property="creatorId"/>
+        <result column="updater_id" property="updaterId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
+        <association property="updater" javaType="java.lang.String"
+             select="com.jin10.spidermanage.mapper.UserMapper.findById" column="updater_id">
+        </association>
+        <association property="creator" javaType="java.lang.String"
+             column="creator_id" select="com.jin10.spidermanage.mapper.UserMapper.findById">
+        </association>
         <association property="server" javaType="com.jin10.spidermanage.vo.ServerVO"
           column="server_id" select="com.jin10.spidermanage.mapper.ServerMapper.findById">
         </association>
@@ -26,7 +35,6 @@
         <collection property="spiderLink"
                     select="findLinkByLabelId"
                     column="id">
-
         </collection>
     </resultMap>
 
@@ -63,12 +71,12 @@
     </select>
 
     <insert id="addElement" useGeneratedKeys="true" keyProperty="lid" keyColumn="id">
-        insert into label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution, executor_id, server_id) values
-        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution}, #{body.executorId}, #{body.serverId})
+        insert into
+        label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution, executor_id, server_id, path, creator_id, updater_id)
+        values
+        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution}, #{body.executorId}, #{body.serverId}, #{body.path}, #{body.creatorId}, #{body.updaterId})
 
-    </insert><delete id="addEle">
-
-    </delete>
+    </insert>
 
     <select id="getByLabelLike" resultType="com.jin10.spidermanage.bean.label.Search">
         select id, label_name, category_id from  label

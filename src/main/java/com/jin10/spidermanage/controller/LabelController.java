@@ -23,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.*;
@@ -53,7 +54,7 @@ public class LabelController {
 
 
     @PostMapping("/add")
-    public BaseResponse add(@Validated @RequestBody InsertBody body, BindingResult result) {
+    public BaseResponse add(@Validated @RequestBody InsertBody body, BindingResult result) throws IOException {
         if (result.hasErrors()) {
             log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
@@ -78,7 +79,7 @@ public class LabelController {
      * @return
      */
     @GetMapping("/delete")
-    public BaseResponse delete(@PathParam("lid") Integer lid, @PathParam("taskId") Integer taskId) {
+    public BaseResponse delete(@PathParam("lid") Integer lid, @PathParam("taskId") @Positive Long taskId) {
         if (ObjectUtils.isNotNull(lid) && ObjectUtils.isNotNull(taskId)) {
             return BaseResponse.ok(labelService.delete(lid, taskId));
         }
@@ -95,7 +96,4 @@ public class LabelController {
     public BaseResponse executorList() throws IOException {
         return BaseResponse.ok(XxlJobUtil.executorList(adminAddresses).getData());
     }
-
-
-
 }

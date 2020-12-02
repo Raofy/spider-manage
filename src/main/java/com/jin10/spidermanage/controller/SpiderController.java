@@ -31,7 +31,6 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/spider")
-//@CrossOrigin(origins = {"*","null"},allowCredentials="true")
 public class SpiderController {
 
     @Autowired
@@ -48,7 +47,7 @@ public class SpiderController {
     }
 
     @GetMapping("/switch")
-    public BaseResponse start(@PathParam("lid") Integer lid, @PathParam("open") Integer open, @PathParam("taskId") Integer taskId) throws IOException {
+    public BaseResponse startOrOff(@PathParam("lid") Integer lid, @PathParam("open") Integer open, @PathParam("taskId") Integer taskId) throws IOException {
         return spiderService.powerSwitch(lid, open, taskId);
     }
 }

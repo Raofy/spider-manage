@@ -48,11 +48,12 @@ public class XxlJobConfig {
     }
 
     @Bean
-    public void jobExecutorSave() throws IOException {
+    public void jobExecutorSave() throws IOException, InterruptedException {
 //        HashMap<String, String> login = new HashMap<>();
 //        login.put("userName", "admin");
 //        login.put("password", "123456");
 //        String admin = XxlJobUtil.login(adminAddresses, "admin", "123456");
+        Thread.sleep(500);
         ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
         if (ObjectUtil.isNotNull(executorList)) {
             List<ExecutorList.DataBean> data = executorList.getData();
