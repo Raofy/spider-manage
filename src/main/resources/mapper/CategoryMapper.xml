@@ -4,19 +4,22 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.jin10.spidermanage.vo.Category">
-        <id column="id" property="gid"/>
-        <result column="category_name" property="category"/>
+        <id column="id" property="id"/>
+        <result column="category_name" property="name"/>
+        <result column="parent_id" property="parentId"/>
         <collection property="labels"
                     select="com.jin10.spidermanage.mapper.LabelMapper.findLabelByCategoryId"
                     column="id">
-
         </collection>
 
     </resultMap>
 
 
+
+
+
     <select id="getAll" resultMap="BaseResultMap">
-        select id, category_name from category;
+        select id, category_name, parent_id from category;
     </select>
 
     <select id="getById" resultMap="BaseResultMap">

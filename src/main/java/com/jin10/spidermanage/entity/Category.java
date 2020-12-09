@@ -29,6 +29,8 @@ public class Category implements Serializable {
     @JsonProperty("category_name")
     private String categoryName;
 
+    private long parentId;
+
 
     @JsonProperty("create_time")
     @JsonFormat(pattern="yyyy-MM-dd HH:MM:ss",timezone = "GMT+8")

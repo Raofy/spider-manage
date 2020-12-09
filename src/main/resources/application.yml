@@ -5,6 +5,11 @@ spring:
 #    active: dev
     active: prod
 
+  # Jackson序列化配置
+  jackson:
+    property-naming-strategy: SNAKE_CASE   # 设置属性命名策略,SNAKE_CASE-返回的json驼峰式转下划线，json body下划线传到后端自动转驼峰式
+    date-format: yyyy-MM-dd HH:mm:ss       # 全局设置@JsonFormat的格式pattern
+    time-zone: GMT+8                       # 设置时区
 ##mybatis-plus日志打印配置
 #mybatis-plus:
 #  configuration:

@@ -46,7 +46,6 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     @Value("${xxl.job.executor.appname}")
     private String executorAppname;
 
-
     @Resource
     private LabelMapper labelMapper;
 
@@ -76,7 +75,6 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
             String path = String.format("/%s", body.getPath());
             body.setPath(path);
         }
-
         labelMapper.addElement(body);
         ArrayList<Link> linkList = new ArrayList<>();
         ArrayList<ImgUrl> imgList = new ArrayList<>();
@@ -107,7 +105,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
             }
         }
 
-        if (StringUtils.isBlank(body.getTimeDesc()) && StringUtils.isBlank(body.getCron())) {  //需求描述和cron为空则存储数据表不调度
+        if (StringUtils.isBlank(body.getTimeDesc()) && StringUtils.isBlank(body.getCron())) {       //需求描述和cron为空则存储数据表不调度(快讯内容)
             return BaseResponse.ok(labelMapper.getById(body.getLid()));
         } else {
             ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
@@ -118,35 +116,6 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     break;
                 }
             }
-//            labelMapper.addElement(body);
-//            ArrayList<Link> linkList = new ArrayList<>();
-//            ArrayList<ImgUrl> imgList = new ArrayList<>();
-//            boolean link = true;
-//            boolean img = true;
-//            if (body.getSpiderLink().size() > 0) {
-//                List<String> spiderLink = body.getSpiderLink();
-//                for (int i = 0; i < spiderLink.size(); i++) {
-//                    String s = spiderLink.get(i);
-//                    if (StringUtils.isNotBlank(s)) {
-//                        linkList.add(new Link(body.getLid(), body.getSpiderLink().get(i)));
-//                    }
-//                }
-//                if (!linkList.isEmpty()) {
-//                    link = linkService.saveOrUpdateBatch(linkList);
-//                }
-//            }
-//            if (body.getImg().size() > 0) {
-//                for (int i = 0; i < body.getImg().size(); i++) {
-//                    String path = imgUrlCache.getElement(body.getImg().get(i));
-//                    if (StringUtils.isNotBlank(path)) {
-//                        imgList.add(new ImgUrl(body.getLid(), body.getImg().get(i), path));
-//                    }
-//
-//                }
-//                if (!imgList.isEmpty()) {
-//                    img = imgUrlService.saveOrUpdateBatch(imgList);
-//                }
-//            }
             if (link && img) {
                 try {
                     Map<String, String> requestInfo = new HashMap<>();

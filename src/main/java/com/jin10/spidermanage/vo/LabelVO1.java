@@ -4,25 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category implements Serializable {
+public class LabelVO1 {
 
-
-//    private Integer gid;
+//    private Integer lid;
     private Integer id;
 
+//    private String labelName;
     private String name;
 
-    private long parentId;
+    private List<LabelVO1> labels;
 
-    private List<Category> labels;
-
-    private List<Category> children;
-
-
+    private List<LabelVO1> children;
 }

@@ -11,7 +11,7 @@ public interface CategoryService extends IService<com.jin10.spidermanage.entity.
 
     int delete(Integer id);
 
-    int update(Integer id, String newName);
+    int update(Integer id, String newName, long parentId);
 
     Category getById(Integer id);
 

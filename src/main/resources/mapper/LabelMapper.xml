@@ -38,9 +38,14 @@
         </collection>
     </resultMap>
 
-    <resultMap id="resultMap" type="com.jin10.spidermanage.vo.Label">
-        <id column="id" property="lid"></id>
-        <result column="label_name" property="labelName"></result>
+    <resultMap id="resultMap" type="com.jin10.spidermanage.vo.LabelVO1">
+        <id column="id" property="id"></id>
+        <result column="label_name" property="name"></result>
+    </resultMap>
+
+    <resultMap id="baseResult" type="com.jin10.spidermanage.vo.Category">
+        <id column="id" property="id"/>
+        <result column="label_name" property="name"/>
     </resultMap>
 
 
@@ -81,5 +86,12 @@
     <select id="getByLabelLike" resultType="com.jin10.spidermanage.bean.label.Search">
         select id, label_name, category_id from  label
         where label_name LIKE CONCAT('%',#{condition},'%')
+    </select>
+
+
+
+    <select id="findByCategoryId" resultMap="baseResult">
+       select id, label_name from label
+        where category_id = #{id}
     </select>
 </mapper>
