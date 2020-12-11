@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
-
+@ToString
 public class ExecutorList {
 
     /**
@@ -23,6 +24,7 @@ public class ExecutorList {
     private List<DataBean> data;
 
     @Data
+    @ToString
     public static class DataBean {
         /**
          * id : 3

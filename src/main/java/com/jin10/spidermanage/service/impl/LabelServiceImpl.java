@@ -24,6 +24,7 @@ import com.jin10.spidermanage.manage.ImgUrlCache;
 import com.jin10.spidermanage.mapper.LabelMapper;
 import com.jin10.spidermanage.util.UploadFile;
 import com.jin10.spidermanage.util.XxlJobUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements LabelService {
 
@@ -111,8 +113,10 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
             ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
             List<ExecutorList.DataBean> executor = executorList.getData();
             for (ExecutorList.DataBean data : executor) {
-                if (data.getTitle().equals("爬虫执行器")) {
+                if (data.getAppname().equals("spider-executor")) {
+                    log.info("在线执行器id为：" + data.getId());
                     body.setExecutorId(data.getId());
+
                     break;
                 }
             }
@@ -176,10 +180,11 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
 
                     XxlJobResponse xxlJobResponse = XxlJobUtil.addJob(adminAddresses, requestInfo);
                     if (xxlJobResponse.getCode() == 200) {
-                        body.setExecutorId(Integer.valueOf(xxlJobResponse.getContent().toString()));
+                        body.setTaskId(Integer.valueOf(xxlJobResponse.getContent().toString()));
                         LambdaUpdateWrapper<Label> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                        lambdaUpdateWrapper.eq(Label::getId, body.getLid()).set(Label::getTaskId, body.getExecutorId());
+                        lambdaUpdateWrapper.eq(Label::getId, body.getLid()).set(Label::getExecutorId, body.getExecutorId()).set(Label::getTaskId, body.getTaskId());
                         baseMapper.update(null, lambdaUpdateWrapper);
+//                        baseMapper.updateById(new Label(body));
                     } else {
                         throw new Exception("" + xxlJobResponse.getMsg());
                     }
@@ -262,11 +267,14 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                 ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
                 List<ExecutorList.DataBean> executor = executorList.getData();
                 for (ExecutorList.DataBean data : executor) {
-                    if (data.getTitle().equals("爬虫执行器")) {
+                    data.toString();
+                    if (data.getAppname().equals("spider-executor")) {
                         body.setExecutorId(data.getId());
+                        log.info("在线执行器id为：" + data.getId());
                         break;
                     }
                 }
+
                 Map<String, String> requestInfo = new HashMap<>();
                 //主键ID
                 if (body.getTaskId() > 0) {
@@ -338,7 +346,8 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                 XxlJobResponse xxlJobResponse = XxlJobUtil.updateJob(adminAddresses, requestInfo);
 
                 if (xxlJobResponse.getCode() == 200) {
-                    labelMapper.updateById(label);
+                    log.info("更新后标签的执行器id：" + label.getExecutorId());
+                    labelMapper.updateById(new Label(body));
                     linkService.remove(new QueryWrapper<Link>().eq("label_id", body.getLid()));
                     imgUrlService.remove(new QueryWrapper<ImgUrl>().eq("label_id", body.getLid()));
                     ArrayList<Link> linkList = new ArrayList<>();
