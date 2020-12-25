@@ -1,7 +1,6 @@
 package com.jin10.spidermanage.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.jin10.spidermanage.bean.BaseResponse;
@@ -13,7 +12,6 @@ import com.jin10.spidermanage.service.LabelService;
 import com.jin10.spidermanage.service.ServerService;
 import com.jin10.spidermanage.service.SpiderService;
 import com.jin10.spidermanage.util.Http;
-import com.jin10.spidermanage.util.RegularUtil;
 import com.jin10.spidermanage.util.XxlJobUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,9 @@ public class SpiderServiceImpl implements SpiderService {
     private LabelService labelService;
 
     @Autowired
+    private Http http;
+
+    @Autowired
     private ServerService serverService;
 
     @Override
@@ -50,7 +51,7 @@ public class SpiderServiceImpl implements SpiderService {
             }else {
                 url = String.format("http://%s/test?%s",server.getServerIp(),body.getParam());
             }
-            BaseResponse request = Http.request(url);
+            BaseResponse request = http.request(url);
             if (ObjectUtil.isNotNull(request.getData())) {
                 return request;
             }

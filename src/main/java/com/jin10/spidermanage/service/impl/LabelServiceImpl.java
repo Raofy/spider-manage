@@ -147,10 +147,10 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     QueryWrapper<Server> queryWrapper = new QueryWrapper<>();
                     Server server = serverService.getBaseMapper().selectOne(queryWrapper.eq("id", body.getServerId()));
                     if (StringUtils.isNotBlank(server.getPort())) {
-                        String url = String.format("http://%s:%s%s?%s&&id=%s", server.getServerIp(), server.getPort(), body.getPath(), body.getParam(), body.getCreatorId());
+                        String url = String.format("http://%s:%s%s?%s&id=%s", server.getServerIp(), server.getPort(), body.getPath(), body.getParam(), body.getCreatorId());
                         requestInfo.put("executorParam", url);
                     } else {
-                        String url = String.format("http://%s%s?%s&&id=%s", server.getServerIp(), body.getPath(), body.getParam(), body.getCreatorId());
+                        String url = String.format("http://%s%s?%s&id=%s", server.getServerIp(), body.getPath(), body.getParam(), body.getCreatorId());
                         requestInfo.put("executorParam", url);
                     }
 
@@ -161,7 +161,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     requestInfo.put("executorTimeout", "0");
 
                     // 失败重试次数
-                    requestInfo.put("executorFailRetryCount", "1");
+                    requestInfo.put("executorFailRetryCount", "0");
 
                     // GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
                     requestInfo.put("glueType", "BEAN");
@@ -312,10 +312,10 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                 QueryWrapper<Server> queryWrapper = new QueryWrapper<>();
                 Server server = serverService.getBaseMapper().selectOne(queryWrapper.eq("id", body.getServerId()));
                 if (StringUtils.isNotBlank(server.getPort())) {
-                    String url = String.format("http://%s:%s%s?%s&&id=%s", server.getServerIp(), server.getPort(), body.getPath(), body.getParam(), body.getUpdaterId());
+                    String url = String.format("http://%s:%s%s?%s&id=%s", server.getServerIp(), server.getPort(), body.getPath(), body.getParam(), body.getUpdaterId());
                     requestInfo.put("executorParam", url);
                 } else {
-                    String url = String.format("http://%s%s?%s&&id=%s", server.getServerIp(), body.getPath(), body.getParam(), body.getUpdaterId());
+                    String url = String.format("http://%s%s?%s&id=%s", server.getServerIp(), body.getPath(), body.getParam(), body.getUpdaterId());
                     requestInfo.put("executorParam", url);
                 }
 
@@ -326,7 +326,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                 requestInfo.put("executorTimeout", "0");
 
                 // 失败重试次数
-                requestInfo.put("executorFailRetryCount", "1");
+                requestInfo.put("executorFailRetryCount", "0");
 
                 // GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
                 requestInfo.put("glueType", "BEAN");

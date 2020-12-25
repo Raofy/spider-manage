@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -47,13 +48,8 @@ public class XxlJobConfig {
         return xxlJobSpringExecutor;
     }
 
-    @Bean
-    public void jobExecutorSave() throws IOException, InterruptedException {
-//        HashMap<String, String> login = new HashMap<>();
-//        login.put("userName", "admin");
-//        login.put("password", "123456");
-//        String admin = XxlJobUtil.login(adminAddresses, "admin", "123456");
-        Thread.sleep(500);
+    @PostConstruct
+    public void jobExecutorSave() throws IOException {
         ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
         if (ObjectUtil.isNotNull(executorList)) {
             List<ExecutorList.DataBean> data = executorList.getData();

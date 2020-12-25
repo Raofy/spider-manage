@@ -113,6 +113,7 @@ public class HttpClientUtils {
                     httpGet.setHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
                 }
             }
+            logger.info("http正式请求地址:{}", url);
             //发起请求
             httpResponse = httpClient.execute(httpGet);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
