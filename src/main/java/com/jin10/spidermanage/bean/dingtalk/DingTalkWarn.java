@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class DingTalkWarn {
 
-    private Integer id;
+    private int id;
     private String msg;
 }

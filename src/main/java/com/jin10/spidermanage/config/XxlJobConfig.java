@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.jin10.spidermanage.bean.spider.ExecutorList;
 import com.jin10.spidermanage.util.XxlJobUtil;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@Slf4j
 @Configuration
 public class XxlJobConfig {
     @Value("${xxl.job.admin.addresses}")
@@ -50,7 +51,9 @@ public class XxlJobConfig {
 
     @PostConstruct
     public void jobExecutorSave() throws IOException {
+        log.info("执行jobExecutorSave()方法：xxl-job地址为" + adminAddresses);
         ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
+        log.info("请求接口数据为：" + executorList);
         if (ObjectUtil.isNotNull(executorList)) {
             List<ExecutorList.DataBean> data = executorList.getData();
             int exit = 0;

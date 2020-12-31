@@ -489,13 +489,13 @@ public class XxlJobUtil {
             String content = EntityUtils.toString(entity, "UTF-8");
             logger.info("初始执行器列表"+content);
             ExecutorList executorList = JSONObject.parseObject(content, ExecutorList.class);
-            Iterator<ExecutorList.DataBean> iterator = executorList.getData().iterator();
-            while (iterator.hasNext()) {
-                ExecutorList.DataBean next = iterator.next();
-                if (ObjectUtils.isNull(next.getAddressList())) {         //将地址为null的数据剔除掉
-                    iterator.remove();
-                }
-            }
+//            Iterator<ExecutorList.DataBean> iterator = executorList.getData().iterator();
+//            while (iterator.hasNext()) {
+//                ExecutorList.DataBean next = iterator.next();
+//                if (ObjectUtils.isNull(next.getAddressList())) {         //将地址为null的数据剔除掉
+//                    iterator.remove();
+//                }
+//            }
             return executorList;
         }
         return null;

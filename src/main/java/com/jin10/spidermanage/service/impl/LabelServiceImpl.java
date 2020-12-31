@@ -64,7 +64,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     private ServerService serverService;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public BaseResponse add(InsertBody body) throws IOException {
         QueryWrapper<Label> condition = new QueryWrapper<>();
         ImgUrlCache imgUrlCache = ImgUrlCache.getInstance();
@@ -116,88 +116,30 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                 if (data.getAppname().equals("spider-executor")) {
                     log.info("在线执行器id为：" + data.getId());
                     body.setExecutorId(data.getId());
-
                     break;
                 }
             }
             if (link && img) {
                 try {
-                    Map<String, String> requestInfo = new HashMap<>();
-
-                    // 执行器主键ID
-                    requestInfo.put("jobGroup", String.valueOf(body.getExecutorId()));
-
-                    // 任务执行CRON表达式
-                    requestInfo.put("jobCron", body.getCron());
-
-                    // 任务描述
-
-                    requestInfo.put("jobDesc", body.getDemandDesc());
-
-                    // 负责人
-                    requestInfo.put("author", "admin");
-
-                    // 执行器路由策略
-                    requestInfo.put("executorRouteStrategy", "RANDOM");
-
-                    // 执行器，任务Handler名称
-                    requestInfo.put("executorHandler", "Job");
-
-                    // todo 执行器，任务参数
-                    QueryWrapper<Server> queryWrapper = new QueryWrapper<>();
-                    Server server = serverService.getBaseMapper().selectOne(queryWrapper.eq("id", body.getServerId()));
-                    if (StringUtils.isNotBlank(server.getPort())) {
-                        String url = String.format("http://%s:%s%s?%s&id=%s", server.getServerIp(), server.getPort(), body.getPath(), body.getParam(), body.getCreatorId());
-                        requestInfo.put("executorParam", url);
-                    } else {
-                        String url = String.format("http://%s%s?%s&id=%s", server.getServerIp(), body.getPath(), body.getParam(), body.getCreatorId());
-                        requestInfo.put("executorParam", url);
-                    }
-
-                    // 阻塞处理策略
-                    requestInfo.put("executorBlockStrategy", "SERIAL_EXECUTION");
-
-                    // 任务执行超时时间，单位秒
-                    requestInfo.put("executorTimeout", "0");
-
-                    // 失败重试次数
-                    requestInfo.put("executorFailRetryCount", "0");
-
-                    // GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
-                    requestInfo.put("glueType", "BEAN");
-
-                    // GLUE备注
-                    requestInfo.put("glueRemark", "GLUE代码初始化");
-
-                    // 调度状态：0-停止，1-运行
-                    requestInfo.put("triggerStatus", "0");
-
-                    // 上次调度时间
-                    requestInfo.put("triggerLastTime", "0");
-
-                    // 下次调度时间
-                    requestInfo.put("triggerNextTime", "0");
-
+                    Map<String, String> requestInfo = registerJob(body);
                     XxlJobResponse xxlJobResponse = XxlJobUtil.addJob(adminAddresses, requestInfo);
                     if (xxlJobResponse.getCode() == 200) {
                         body.setTaskId(Integer.valueOf(xxlJobResponse.getContent().toString()));
                         LambdaUpdateWrapper<Label> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                         lambdaUpdateWrapper.eq(Label::getId, body.getLid()).set(Label::getExecutorId, body.getExecutorId()).set(Label::getTaskId, body.getTaskId());
                         baseMapper.update(null, lambdaUpdateWrapper);
-//                        baseMapper.updateById(new Label(body));
                     } else {
                         throw new Exception("" + xxlJobResponse.getMsg());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    labelMapper.deleteById(body.getLid());        //数据库回退
+//                    labelMapper.deleteById(body.getLid());        //数据库回退
                     return BaseResponse.error(e.getMessage());
                 }
                 return BaseResponse.ok(labelMapper.getById(body.getLid()));
             }
         }
         return BaseResponse.error("添加失败");
-
     }
 
     @Override
@@ -232,7 +174,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public BaseResponse updateLabel(InsertBody body) {    //先更新调度器后更新数据库
         Label label = new Label(body);
         ImgUrlCache imgUrlCache = ImgUrlCache.getInstance();
@@ -242,13 +184,12 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
             imgUrlService.remove(new QueryWrapper<ImgUrl>().eq("label_id", body.getLid()));
             ArrayList<Link> linkList = new ArrayList<>();
             ArrayList<ImgUrl> imgList = new ArrayList<>();
-            boolean link = true;
-            boolean img = true;
+
             if (body.getSpiderLink().size() > 0) {
                 for (int i = 0; i < body.getSpiderLink().size(); i++) {
                     linkList.add(new Link(body.getLid(), body.getSpiderLink().get(i)));
                 }
-                link = linkService.saveOrUpdateBatch(linkList);
+                linkService.saveOrUpdateBatch(linkList);
             }
             if (body.getImg().size() > 0) {
                 for (int i = 0; i < body.getImg().size(); i++) {
@@ -258,7 +199,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     }
                 }
                 if (!imgList.isEmpty()) {
-                    img = imgUrlService.saveOrUpdateBatch(imgList);
+                    imgUrlService.saveOrUpdateBatch(imgList);
                 }
             }
             return BaseResponse.ok(labelMapper.getById(body.getLid()));
@@ -275,7 +216,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     }
                 }
 
-                Map<String, String> requestInfo = new HashMap<>();
+                Map<String, String> requestInfo = registerJob(body);
                 //主键ID
                 if (body.getTaskId() > 0) {
                     requestInfo.put("id", String.valueOf(body.getTaskId()));
@@ -289,76 +230,20 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     body.setPath(path);
                 }
 
-
-                // 执行器主键ID
-                requestInfo.put("jobGroup", String.valueOf(body.getExecutorId()));
-
-                // 任务执行CRON表达式
-                requestInfo.put("jobCron", body.getCron());
-
-                // 任务描述
-                requestInfo.put("jobDesc", body.getDemandDesc());
-
-                // 负责人
-                requestInfo.put("author", "admin");
-
-                // 执行器路由策略
-                requestInfo.put("executorRouteStrategy", "RANDOM");
-
-                // 执行器，任务Handler名称
-                requestInfo.put("executorHandler", "Job");
-
-                // todo 执行器，任务参数
-                QueryWrapper<Server> queryWrapper = new QueryWrapper<>();
-                Server server = serverService.getBaseMapper().selectOne(queryWrapper.eq("id", body.getServerId()));
-                if (StringUtils.isNotBlank(server.getPort())) {
-                    String url = String.format("http://%s:%s%s?%s&id=%s", server.getServerIp(), server.getPort(), body.getPath(), body.getParam(), body.getUpdaterId());
-                    requestInfo.put("executorParam", url);
-                } else {
-                    String url = String.format("http://%s%s?%s&id=%s", server.getServerIp(), body.getPath(), body.getParam(), body.getUpdaterId());
-                    requestInfo.put("executorParam", url);
-                }
-
-                // 阻塞处理策略
-                requestInfo.put("executorBlockStrategy", "SERIAL_EXECUTION");
-
-                // 任务执行超时时间，单位秒
-                requestInfo.put("executorTimeout", "0");
-
-                // 失败重试次数
-                requestInfo.put("executorFailRetryCount", "0");
-
-                // GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
-                requestInfo.put("glueType", "BEAN");
-
-                // GLUE备注
-                requestInfo.put("glueRemark", "GLUE代码初始化");
-
-                // 调度状态：0-停止，1-运行
-                requestInfo.put("triggerStatus", "0");
-
-                // 上次调度时间
-                requestInfo.put("triggerLastTime", "0");
-
-                // 下次调度时间
-                requestInfo.put("triggerNextTime", "0");
-
                 XxlJobResponse xxlJobResponse = XxlJobUtil.updateJob(adminAddresses, requestInfo);
-
-                if (xxlJobResponse.getCode() == 200) {
+                XxlJobResponse startJob = XxlJobUtil.startJob(adminAddresses, body.getTaskId());      //由于xxl-job更新接口不能更新调度状态，开启任务
+                if (xxlJobResponse.getCode() == 200 || startJob.getCode() == 200) {
                     log.info("更新后标签的执行器id：" + label.getExecutorId());
                     labelMapper.updateById(new Label(body));
                     linkService.remove(new QueryWrapper<Link>().eq("label_id", body.getLid()));
                     imgUrlService.remove(new QueryWrapper<ImgUrl>().eq("label_id", body.getLid()));
                     ArrayList<Link> linkList = new ArrayList<>();
                     ArrayList<ImgUrl> imgList = new ArrayList<>();
-                    boolean link = true;
-                    boolean img = true;
                     if (body.getSpiderLink().size() > 0) {
                         for (int i = 0; i < body.getSpiderLink().size(); i++) {
                             linkList.add(new Link(body.getLid(), body.getSpiderLink().get(i)));
                         }
-                        link = linkService.saveOrUpdateBatch(linkList);
+                        linkService.saveOrUpdateBatch(linkList);
                     }
                     if (body.getImg().size() > 0) {
                         for (int i = 0; i < body.getImg().size(); i++) {
@@ -368,7 +253,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                             }
                         }
                         if (!imgList.isEmpty()) {
-                            img = imgUrlService.saveOrUpdateBatch(imgList);
+                            imgUrlService.saveOrUpdateBatch(imgList);
                         }
                     }
                     return BaseResponse.ok(labelMapper.getById(body.getLid()));
@@ -393,4 +278,65 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
 
         return labelMapper.getByLabelLike(condition);
     }
+
+    public Map<String, String> registerJob(InsertBody body) {
+        Map<String, String> requestInfo = new HashMap<>();
+
+        // 执行器主键ID
+        requestInfo.put("jobGroup", String.valueOf(body.getExecutorId()));
+
+        // 任务执行CRON表达式
+        requestInfo.put("jobCron", body.getCron());
+
+        // 任务描述
+        requestInfo.put("jobDesc", body.getDemandDesc());
+
+        // 负责人
+        requestInfo.put("author", "admin");
+
+        // 执行器路由策略
+        requestInfo.put("executorRouteStrategy", "RANDOM");
+
+        // 执行器，任务Handler名称
+        requestInfo.put("executorHandler", "Job");
+
+        // todo 执行器，任务参数
+        QueryWrapper<Server> queryWrapper = new QueryWrapper<>();
+        Server server = serverService.getBaseMapper().selectOne(queryWrapper.eq("id", body.getServerId()));
+        if (StringUtils.isNotBlank(server.getPort())) {
+            String url = String.format("http://%s:%s%s?%s&id=%s", server.getServerIp(), server.getPort(), body.getPath(), body.getParam(), body.getCreatorId());
+            requestInfo.put("executorParam", url);
+        } else {
+            String url = String.format("http://%s%s?%s&id=%s", server.getServerIp(), body.getPath(), body.getParam(), body.getCreatorId());
+            requestInfo.put("executorParam", url);
+        }
+
+        // 阻塞处理策略
+        requestInfo.put("executorBlockStrategy", "SERIAL_EXECUTION");
+
+        // 任务执行超时时间，单位秒
+        requestInfo.put("executorTimeout", "0");
+
+        // 失败重试次数
+        requestInfo.put("executorFailRetryCount", "0");
+
+        // GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
+        requestInfo.put("glueType", "BEAN");
+
+        // GLUE备注
+        requestInfo.put("glueRemark", "GLUE代码初始化");
+
+        // 调度状态：0-停止，1-运行
+        requestInfo.put("triggerStatus", "1");
+
+        // 上次调度时间
+        requestInfo.put("triggerLastTime", "0");
+
+        // 下次调度时间
+        requestInfo.put("triggerNextTime", "0");
+
+        return requestInfo;
+    }
+
+
 }

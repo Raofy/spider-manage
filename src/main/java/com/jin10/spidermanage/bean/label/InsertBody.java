@@ -81,7 +81,7 @@ public class InsertBody {
     private String cron;
 
     /**
-     * 是否开启调度
+     * 是否开启调度，默认为0
      * @param bodyTest
      */
     private int open;

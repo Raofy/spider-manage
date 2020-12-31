@@ -2,8 +2,8 @@
 spring:
   profiles:
 #    active: local
-#    active: dev
-    active: prod
+    active: dev
+#    active: prod
 
   # Jackson序列化配置
   jackson:
