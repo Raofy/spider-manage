@@ -21,6 +21,10 @@ import java.util.Map;
 public class XxlJobConfig {
     @Value("${xxl.job.admin.addresses}")
     private String adminAddresses;
+    @Value("${xxl.job.admin.username}")
+    private String username;
+    @Value("${xxl.job.admin.password}")
+    private String password;
     @Value("${xxl.job.executor.appname}")
     private String appName;
     @Value("${xxl.job.executor.ip}")
@@ -51,6 +55,7 @@ public class XxlJobConfig {
 
     @PostConstruct
     public void jobExecutorSave() throws IOException {
+        XxlJobUtil.login(adminAddresses, username, password);
         log.info("执行jobExecutorSave()方法：xxl-job地址为" + adminAddresses);
         ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
         log.info("请求接口数据为：" + executorList);

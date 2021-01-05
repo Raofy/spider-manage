@@ -1,44 +1,27 @@
 package com.jin10.spidermanage.util;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.spider.ExecutorList;
 import com.jin10.spidermanage.bean.spider.XxlJobResponse;
-import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
 import java.io.*;
 import java.util.*;
 
@@ -62,6 +45,7 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         if (mapData.size() != 0) {
             Set keySet = mapData.keySet();
@@ -96,6 +80,7 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         if (mapData.size() != 0) {
             Set keySet = mapData.keySet();
@@ -117,6 +102,14 @@ public class XxlJobUtil {
         return null;
     }
 
+    /**
+     * 删除调度器
+     *
+     * @param url
+     * @param id
+     * @return
+     * @throws IOException
+     */
     public static XxlJobResponse deleteExecutor(String url, Long id) throws IOException {
         String path = "/jobgroup/save";
         return doGetRequest(url, path);
@@ -140,6 +133,7 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         if (mapdata.size() != 0) {
             Set keySet = mapdata.keySet();
@@ -162,45 +156,14 @@ public class XxlJobUtil {
     }
 
     /**
-     * 新增/编辑任务
-     *
-     * @param requestInfo
-     * @return
-     * @throws HttpException
-     * @throws IOException
-     */
-    public static JSONObject addJob(Map<String, String> requestInfo) throws HttpException, IOException {
-        String targetUrl = "http://127.0.0.1:9090/xxl-job-admin/jobinfo/add";
-        logger.info("请求地址：" + targetUrl);
-        HashMap<String, String> header = new HashMap<>();
-        String result = HttpClientUtils.doPostRequest(targetUrl, header, null, new StringEntity(JSON.toJSONString(requestInfo), ContentType.APPLICATION_FORM_URLENCODED));
-        System.out.println("result:" + result);
-        return (JSONObject) JSON.toJSON(result);
-    }
-
-    /**
-     * 新增/编辑任务
+     * 更新任务
      *
      * @param url
-     * @param requestInfo
+     * @param mapdata
      * @return
      * @throws HttpException
      * @throws IOException
      */
-    public static JSONObject addJob(String url, JSONObject requestInfo) throws HttpException, IOException {
-        String path = "/jobinfo/add";
-        String targetUrl = url + path;
-        logger.info("请求地址：" + targetUrl);
-        HttpClient httpClient = new HttpClient();
-        PostMethod post = new PostMethod(targetUrl);
-        RequestEntity requestEntity = new StringRequestEntity(requestInfo.toString(), "application/x-www-form-urlencoded", "utf-8");
-        post.setRequestEntity(requestEntity);
-        httpClient.executeMethod(post);
-        JSONObject result = new JSONObject();
-        result = getJsonObject(post, result);
-        return result;
-    }
-
     public static XxlJobResponse updateJob(String url, Map<String, String> mapdata) throws HttpException, IOException {
         String path = "/jobinfo/update";
         String targetUrl = url + path;
@@ -209,6 +172,7 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         if (mapdata.size() != 0) {
             // 将mapdata中的key存在set集合中，通过迭代器取出所有的key，再获取每一个键对应的值
@@ -302,6 +266,7 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         if (mapdata.size() != 0) {
             // 将mapdata中的key存在set集合中，通过迭代器取出所有的key，再获取每一个键对应的值
@@ -332,6 +297,7 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
         CloseableHttpResponse execute = httpClient.execute(httpPost);
         response = httpClient.execute(httpPost);
         HttpEntity entity = response.getEntity();
@@ -342,6 +308,16 @@ public class XxlJobUtil {
         }
 
     }
+
+    /**
+     * Get请求
+     *
+     * @param url
+     * @param path
+     * @return
+     * @throws HttpException
+     * @throws IOException
+     */
     public static JSONObject doGet(String url, String path) throws HttpException, IOException {
         String targetUrl = url + path;
         HttpClient httpClient = new HttpClient();
@@ -368,12 +344,6 @@ public class XxlJobUtil {
             stringBuffer.append(str);
         }
         if (get.getStatusCode() == 200) {
-            /**
-             *  使用此方式会出现
-             *  Going to buffer response body of large or unknown size. Using getResponseBodyAsStream instead is recommended.
-             *  异常
-             *  String responseBodyAsString = get.getResponseBodyAsString();
-             *  result = JSONObject.parseObject(responseBodyAsString);*/
             response = JSONObject.parseObject(stringBuffer.toString(), XxlJobResponse.class);
         } else {
             try {
@@ -394,16 +364,9 @@ public class XxlJobUtil {
             stringBuffer.append(str);
         }
         if (get.getStatusCode() == 200) {
-            /**
-             *  使用此方式会出现
-             *  Going to buffer response body of large or unknown size. Using getResponseBodyAsStream instead is recommended.
-             *  异常
-             *  String responseBodyAsString = get.getResponseBodyAsString();
-             *  result = JSONObject.parseObject(responseBodyAsString);*/
             result = JSONObject.parseObject(stringBuffer.toString());
         } else {
             try {
-//                result = JSONObject.parseObject(get.getResponseBodyAsString());
                 result = JSONObject.parseObject(stringBuffer.toString());
             } catch (Exception e) {
                 result.put("error", stringBuffer.toString());
@@ -414,25 +377,13 @@ public class XxlJobUtil {
 
 
     public static String login(String url, String userName, String password) throws HttpException, IOException {
-        String path = "/jobinfo/login?userName=" + userName + "&password=" + password;
-        String targetUrl = url + path;
-        HttpClient httpClient = new HttpClient();
-        HttpMethod get = new GetMethod(targetUrl);
-        httpClient.executeMethod(get);
-        if (get.getStatusCode() == 200) {
-            Cookie[] cookies = httpClient.getState().getCookies();
-            StringBuffer tmpcookies = new StringBuffer();
-            for (Cookie c : cookies) {
-                tmpcookies.append(c.toString() + ";");
-            }
-            cookie = tmpcookies.toString();
-        } else {
-            try {
-                cookie = "";
-            } catch (Exception e) {
-                cookie = "";
-            }
-        }
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userName", userName);
+        requestBody.put("password", password);
+        HttpResponse admin = HttpRequest.post(url+"/login").form(requestBody).execute();
+        StringBuffer tmpCookies = new StringBuffer();
+        admin.getCookies().forEach(item -> tmpCookies.append(item.getName() + "=" + item.getValue() + ";"));
+        cookie = tmpCookies.toString();
         return cookie;
     }
 
@@ -451,6 +402,7 @@ public class XxlJobUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Cookie", cookie);
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         if (mapdata.size() != 0) {
             // 将mapdata中的key存在set集合中，通过迭代器取出所有的key，再获取每一个键对应的值
@@ -476,26 +428,17 @@ public class XxlJobUtil {
         String path = "/jobgroup/pageList";
         String targetUrl = url + path;
         logger.info("请求地址：" + targetUrl);
-
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(targetUrl);
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-//        httpPost.addHeader("Cookie", cookie);
+        httpPost.addHeader("Cookie", cookie);
         response = httpClient.execute(httpPost);
         HttpEntity entity = response.getEntity();
         if (entity != null) {
-            // 响应的结果
             String content = EntityUtils.toString(entity, "UTF-8");
             logger.info("初始执行器列表"+content);
             ExecutorList executorList = JSONObject.parseObject(content, ExecutorList.class);
-//            Iterator<ExecutorList.DataBean> iterator = executorList.getData().iterator();
-//            while (iterator.hasNext()) {
-//                ExecutorList.DataBean next = iterator.next();
-//                if (ObjectUtils.isNull(next.getAddressList())) {         //将地址为null的数据剔除掉
-//                    iterator.remove();
-//                }
-//            }
             return executorList;
         }
         return null;
