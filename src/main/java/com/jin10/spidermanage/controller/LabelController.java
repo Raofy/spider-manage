@@ -31,7 +31,6 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/label")
-//@CrossOrigin(origins = {"*","null"},allowCredentials="true")
 public class LabelController {
 
     @Value("${xxl.job.admin.addresses}")

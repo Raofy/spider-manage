@@ -1,5 +1,8 @@
 package com.jin10.spidermanage.task;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.jin10.spidermanage.util.Http;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -12,32 +15,28 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.xml.crypto.Data;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class DemoJobHandler extends IJobHandler {
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final AtomicInteger counts = new AtomicInteger();
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private Http http;
 
-    @Resource
-    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-
     @XxlJob(value = "Job")
     @Override
-    public ReturnT<String> execute(String param) throws Exception {
-
-        /**
-         * 请求接口
-         */
-        logger.info("调度线程" + Thread.currentThread().getName() + "执行调度任务：" + param);
-        logger.info("当前线程池活动线程的数量：" + threadPoolTaskExecutor.getActiveCount());
-        http.asyncRequest(param);
-        return ReturnT.SUCCESS;
-
-
+    public ReturnT<String> execute(String param) {
+        logger.info(DateUtil.now() + " 调度任务：" + param + " 调度线程" + Thread.currentThread().getName());
+        HttpResponse httpResponse = HttpRequest.get(param).executeAsync();
+        logger.info(DateUtil.now() + " 调度任务：" + param + " 调度线程" + Thread.currentThread().getName() + " 处理结果 " + httpResponse.body());
+//        http.asyncRequest(param);
+        if (httpResponse.getStatus() == 200) {
+            return ReturnT.SUCCESS;
+        } else {
+            return ReturnT.FAIL;
+        }
     }
 }

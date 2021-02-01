@@ -12,6 +12,7 @@ import com.jin10.spidermanage.service.LabelService;
 import com.jin10.spidermanage.service.ServerService;
 import com.jin10.spidermanage.service.SpiderService;
 import com.jin10.spidermanage.util.Http;
+import com.jin10.spidermanage.util.HttpClientUtils;
 import com.jin10.spidermanage.util.XxlJobUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class SpiderServiceImpl implements SpiderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public BaseResponse powerSwitch(Integer lid, Integer open, Integer taskId) throws IOException {
         if (ObjectUtil.isNotNull(lid) && ObjectUtil.isNotNull(open) && ObjectUtil.isNotNull(taskId)) {
             LambdaUpdateWrapper<Label> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();

@@ -77,9 +77,4 @@ public class XxlJobConfig {
             }
         }
     }
-
-    @Bean
-    public void xxlJobLogin() throws IOException {
-
-    }
 }

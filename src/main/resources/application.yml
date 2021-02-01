@@ -2,23 +2,11 @@
 spring:
   profiles:
 #    active: local
-    active: dev
-#    active: prod
+#    active: dev
+    active: prod
 
   # Jackson序列化配置
   jackson:
     property-naming-strategy: SNAKE_CASE   # 设置属性命名策略,SNAKE_CASE-返回的json驼峰式转下划线，json body下划线传到后端自动转驼峰式
     date-format: yyyy-MM-dd HH:mm:ss       # 全局设置@JsonFormat的格式pattern
     time-zone: GMT+8                       # 设置时区
-##mybatis-plus日志打印配置
-#mybatis-plus:
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#  global-config:
-#    db-config:
-#      #logic-delete-field: flag  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
-#      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
-#      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
-#
-#server:
-#  port: 8088

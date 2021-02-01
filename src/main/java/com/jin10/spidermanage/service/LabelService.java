@@ -26,7 +26,13 @@ public interface LabelService extends IService<Label> {
 
     List<Search> getLabelByCondition(String condition);
 
-
+    /**
+     *  根据params字段查询维护人
+     *
+     * @param params
+     * @return
+     */
+    BaseResponse getMaintainerByParams(String params);
 
 
 }

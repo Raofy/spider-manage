@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/login")
-//@CrossOrigin(origins = {"*","null"},allowCredentials="true")
 public class LoginController {
 
     @GetMapping("/getUserInfo")

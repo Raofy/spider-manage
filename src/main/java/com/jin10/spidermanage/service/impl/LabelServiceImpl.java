@@ -1,7 +1,14 @@
 package com.jin10.spidermanage.service.impl;
 
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.net.URLDecoder;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -34,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 ;
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -277,6 +285,50 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     public List<Search> getLabelByCondition(String condition) {
 
         return labelMapper.getByLabelLike(condition);
+    }
+
+    @Override
+    public BaseResponse getMaintainerByParams(String params) {
+        String escapeParams = null;
+        String reverseEscapeParams = null;
+        String reverseParams = null;
+        List<Label> labels = null;
+        if (StringUtils.isBlank(params)) {
+            return BaseResponse.error("参数不能为空");
+        }
+        //获取到Map集合
+        Map<String, String> paramMap = HttpUtil.decodeParamMap(URLDecoder.decode(params, Charset.defaultCharset()), Charset.defaultCharset());
+        if (paramMap.containsKey("spider")) {
+//            params = String.format("%s&%s", "spider="+paramMap.get("spider"), "msg="+paramMap.get("msg"));
+//            escapeParams = String.format("%s&%s", "spider="+paramMap.get("spider"), URLUtil.encode("msg="+paramMap.get("msg")));
+//            reverseEscapeParams = String.format("%s&%s", URLUtil.encode("msg="+paramMap.get("msg")), "spider="+paramMap.get("spider"));
+//            reverseParams = String.format("%s&%s", "msg="+paramMap.get("msg"), "spider="+paramMap.get("spider"));
+            labels = baseMapper.selectList(new LambdaQueryWrapper<Label>().like(Label::getParam, "spider="+paramMap.get("spider")));
+        }
+        // 查询label表获取到维护人的id
+//        labels = baseMapper.selectList(new LambdaQueryWrapper<Label>().likeRight(Label::getParam, params).
+//                or().likeRight(Label::getParam, reverseParams).
+//                or().likeRight(Label::getParam, escapeParams).
+//                or().likeRight(Label::getParam, reverseEscapeParams));
+        if (CollectionUtil.isNotEmpty(labels)) {
+            List<User> users = new ArrayList<>();
+            LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+            List ids = new ArrayList();
+            labels.forEach(item -> {
+                if (item.getUpdaterId() == 0) {
+                    ids.add(item.getCreatorId());
+                } else {
+                    ids.add(item.getUpdaterId());
+                }
+            });
+            users = userService.getBaseMapper().selectList(wrapper.in(User::getId, ids));
+            if (CollectionUtil.isNotEmpty(users)) {
+                return BaseResponse.ok(users);
+            } else {
+                return BaseResponse.error("未知维护人");
+            }
+        }
+        return BaseResponse.error("没有找到对应模板");
     }
 
     public Map<String, String> registerJob(InsertBody body) {

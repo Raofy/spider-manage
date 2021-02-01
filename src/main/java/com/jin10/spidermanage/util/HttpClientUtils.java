@@ -1,6 +1,5 @@
 package com.jin10.spidermanage.util;
 
-import org.apache.commons.httpclient.Cookie;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -8,7 +7,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -113,7 +111,6 @@ public class HttpClientUtils {
                     httpGet.setHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
                 }
             }
-            logger.info("http正式请求地址:{}", url);
             //发起请求
             httpResponse = httpClient.execute(httpGet);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
