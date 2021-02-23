@@ -16,23 +16,22 @@ public class ScheduleTask {
     private String adminAddresses;
 
     /**
-     * 每个月的最后一天去清除xxl-job上个月的调度日志
+     * 每天凌晨0点清除xxl-job所有的调度日志
      *
      * @throws IOException
      */
-    @Scheduled(cron = "0 59 23 28-31 * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void clearXxlJobLog() throws IOException {
         log.info(DateUtil.now() + "清理xxl-job日志");
-        XxlJobUtil.clearXxlJobLog(adminAddresses, 0,0,1);
+        XxlJobUtil.clearXxlJobLog(adminAddresses, 0,0,9);
     }
 
     /**
-     * 每间隔10分钟请求一次xxl-job，检测是否响应
+     * 每间隔5分钟请求一次xxl-job，检测是否响应
      *
      * @throws IOException
      */
     @Scheduled(cron = "0 0/5 * * * ?")
-//    @Scheduled(cron = "0/15 * * * * ?")
     public void testXxlJobResponse() {
         XxlJobUtil.testXxlJobResponse(adminAddresses);
     }

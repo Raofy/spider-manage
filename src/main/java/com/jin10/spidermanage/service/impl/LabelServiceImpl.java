@@ -141,7 +141,6 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-//                    labelMapper.deleteById(body.getLid());        //数据库回退
                     return BaseResponse.error(e.getMessage());
                 }
                 return BaseResponse.ok(labelMapper.getById(body.getLid()));

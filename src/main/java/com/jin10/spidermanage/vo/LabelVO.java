@@ -24,6 +24,11 @@ public class LabelVO implements Serializable {
     private Integer gid;
 
     /**
+     * 所有父级目录id
+     */
+    private String rid;
+
+    /**
      * 抓取时间描述
      */
     @JsonProperty("time_desc")

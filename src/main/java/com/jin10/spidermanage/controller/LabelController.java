@@ -7,6 +7,7 @@ import com.jin10.spidermanage.bean.BaseResponse;
 import com.jin10.spidermanage.bean.label.InsertBody;
 import com.jin10.spidermanage.entity.ImgUrl;
 import com.jin10.spidermanage.entity.Label;
+import com.jin10.spidermanage.service.CategoryService;
 import com.jin10.spidermanage.service.ImgUrlService;
 import com.jin10.spidermanage.service.LabelService;
 import com.jin10.spidermanage.service.LinkService;
@@ -14,6 +15,7 @@ import com.jin10.spidermanage.util.Http;
 import com.jin10.spidermanage.util.HttpClientUtils;
 import com.jin10.spidermanage.util.RegularUtil;
 import com.jin10.spidermanage.util.XxlJobUtil;
+import com.jin10.spidermanage.vo.LabelVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +43,9 @@ public class LabelController {
     @Autowired
     private LabelService labelService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping("/all")
     public BaseResponse getAll() {
         return BaseResponse.ok(labelService.getAll());
@@ -48,7 +53,15 @@ public class LabelController {
 
     @GetMapping("/get/{lid}")
     public BaseResponse getById(@PathVariable("lid") Integer id) {
-        return BaseResponse.ok(labelService.getById(id));
+
+        LabelVO template = labelService.getById(id);
+        if (null != template) {
+            // 查询该模板的所有目录id
+            Integer gid = template.getGid();        // 父级目录id
+            template.setRid(categoryService.getDirectorys(gid));
+        }
+
+        return BaseResponse.ok(template);
     }
 
 

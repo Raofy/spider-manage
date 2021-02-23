@@ -14,6 +14,7 @@ import com.jin10.spidermanage.service.ImgUrlService;
 import com.jin10.spidermanage.service.LabelService;
 import com.jin10.spidermanage.util.XxlJobUtil;
 import com.jin10.spidermanage.vo.LabelVO1;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,47 +53,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, com.jin10.s
     }
 
 
-//    @Override
-//    public CategoryList getAll() {
-//        try {
-//            List<Category> all = categoryMapper.getAll();
-//            List<Category> folderTree = new ArrayList<>();
-//            all.forEach(item -> {
-//                if (item.getParentId() == 0) {               //根目录
-//                    Category category = new Category();
-//                    category.setGid(item.getGid());
-//                    category.setLabelVO1s(item.getLabelVO1s());
-//                    category.setParentId(item.getParentId());
-//                    category.setCategory(item.getCategory());
-//                    category.setChildren(getFolderTree(item.getGid(), all));
-//                    folderTree.add(category);
-//                }
-//            });
-//            return new CategoryList(folderTree, XxlJobUtil.executorList(adminAddresses).getData());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     @Override
     public CategoryList getAll() {
         try {
             List<Category> all = categoryMapper.getAll();
             List<Category> folderTree = new ArrayList<>();
-//            all.forEach(item -> {
-//                if (item.getParentId() == 0) {               //根目录
-//                    Category category = new Category();
-//                    category.setGid(item.getGid());
-//                    category.setLabels(item.getLabels());
-//                    category.setParentId(item.getParentId());
-//                    category.setCategory(item.getCategory());
-//                    category.setLabels(getFolderTree(item.getGid(), all));
-//                    folderTree.add(category);
-//                } else {
-//                    folderTree.add(item);
-//                }
-//            });
             for (Category item : all) {
                 if (item.getParentId() == 0) {               //根目录
                     Category category = new Category();
@@ -145,29 +110,37 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, com.jin10.s
         return result;
     }
 
-    /**
-     * 递归获取子目录
-     *
-     * @param id
-     * @param all
-     * @return
-     */
-//    public List<Category> getFolderTree(long id, List<Category> all) {
-//        List<Category> result = new ArrayList<>();
-//        getChildren(id, all).forEach(item -> {
-//            Category category = new Category();
-//            category.setGid(item.getGid());
-//            category.setLabelVO1s(item.getLabelVO1s());
-//            category.setParentId(item.getParentId());
-//            category.setCategory(item.getCategory());
-//            List<Category> folderTree = getFolderTree(item.getGid(), all);
-//            if (!folderTree.isEmpty()) {
-//                category.setChildren(folderTree);
-//            }
-//            result.add(category);
-//        });
-//        return result;
-//    }
+    @Override
+    public String getDirectorys(Integer id) {
+        List<Category> all = categoryMapper.getAll();
+        int flag = id;
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.add(id);
+        while (flag != 0) {
+            for (Category item : all) {
+                if (item.getId() == flag) {
+                    if (item.getParentId() > 0) {
+                        ids.add((int) item.getParentId());
+                    }
+                    flag = (int) item.getParentId();
+                    break;
+                }
+            }
+        }
+        return StringUtils.join(ids, ",");
+    }
+
+    public int getDirectoryId(List<Category> list, int id) {
+        int flag = 0;
+        for (Category item : list) {
+            if (item.getId() == id && item.getParentId() == 0) {
+                return (int) item.getParentId();
+            } else if (item.getId() == id && item.getParentId() > 0) {
+                flag = (int) item.getParentId();
+            }
+        }
+        return getDirectoryId(list, flag);
+    }
 
     /**
      * 递归获取子目录

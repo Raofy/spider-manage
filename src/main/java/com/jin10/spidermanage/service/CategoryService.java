@@ -15,5 +15,11 @@ public interface CategoryService extends IService<com.jin10.spidermanage.entity.
 
     Category getById(Integer id);
 
+    /**
+     * 获取指定组别id的所有父级目录的id
+     * @param id
+     * @return
+     */
+    String getDirectorys(Integer id);
 
 }
