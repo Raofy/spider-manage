@@ -22,9 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.beans.Transient;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, com.jin10.spidermanage.entity.Category> implements CategoryService {
@@ -127,6 +125,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, com.jin10.s
                 }
             }
         }
+        Collections.reverse(ids);
         return StringUtils.join(ids, ",");
     }
 
