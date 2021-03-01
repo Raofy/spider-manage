@@ -13,11 +13,17 @@ import java.util.List;
 
 public interface LabelService extends IService<Label> {
 
+    BaseResponse insertElement(InsertBody body) throws IOException;
+
+
+
     BaseResponse add(InsertBody body) throws IOException;
 
     List<LabelVO> getAll();
 
     boolean delete(Integer id, Long eid);
+
+    BaseResponse updateElement(InsertBody body) throws IOException;
 
     BaseResponse updateLabel(InsertBody body);
 

@@ -22,6 +22,8 @@ import com.jin10.spidermanage.bean.spider.ExecutorList;
 import com.jin10.spidermanage.bean.spider.XxlJobResponse;
 import com.jin10.spidermanage.entity.*;
 import com.jin10.spidermanage.exception.http.ForbiddenException;
+import com.jin10.spidermanage.exception.http.HttpException;
+import com.jin10.spidermanage.exception.http.NotFoundException;
 import com.jin10.spidermanage.mapper.ServerMapper;
 import com.jin10.spidermanage.service.*;
 import com.jin10.spidermanage.vo.AddLabel;
@@ -70,6 +72,37 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
 
     @Autowired
     private ServerService serverService;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public BaseResponse insertElement(InsertBody body) throws IOException {
+        // 查询是否已经存在相同名字的模板了
+        Integer isExit = baseMapper.selectCount(new QueryWrapper<Label>().lambda().eq(Label::getLabelName, body.getLabelName()));
+        if (isExit == 0) {
+            if (!(body.getPath().startsWith("/"))) {                   // 判断参数路径是否正确
+                String path = String.format("/%s", body.getPath());
+                body.setPath(path);
+            }
+            if (StringUtils.isNotBlank(body.getTimeDesc()) && StringUtils.isNotBlank(body.getCron())) {     // 快讯内容才添加任务调度
+                this.setExecutorId(body);
+                // 注册调度，并开启
+                Map<String, String> requestInfo = registerJob(body);
+                XxlJobResponse xxlJobResponse = XxlJobUtil.addJob(adminAddresses, requestInfo);
+                if (xxlJobResponse.getCode() == 200) {
+                    body.setTaskId(Integer.valueOf(xxlJobResponse.getContent().toString()));
+                } else {
+                    return BaseResponse.error(xxlJobResponse.getMsg());
+                }
+            }
+            // 存储模板数据到库
+            labelMapper.addElement(body);
+            this.updateLinkAndImgUrl(body);
+            return BaseResponse.ok(true);
+        } else {
+            return BaseResponse.error("存在重复的模板！！");
+        }
+
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -137,6 +170,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                         lambdaUpdateWrapper.eq(Label::getId, body.getLid()).set(Label::getExecutorId, body.getExecutorId()).set(Label::getTaskId, body.getTaskId());
                         baseMapper.update(null, lambdaUpdateWrapper);
                     } else {
+
                         throw new Exception("" + xxlJobResponse.getMsg());
                     }
                 } catch (Exception e) {
@@ -178,6 +212,41 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
         }
 
         return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public BaseResponse updateElement(InsertBody body) throws IOException {
+        //判断路径是否以/path开头
+        if (!(body.getPath().startsWith("/"))) {
+            String path = String.format("/%s", body.getPath());
+            body.setPath(path);
+        }
+        if (StringUtils.isNotBlank(body.getTimeDesc()) && StringUtils.isNotBlank(body.getCron())) {
+            this.setExecutorId(body);
+            Map<String, String> requestInfo = registerJob(body);
+            //主键ID
+            if (body.getTaskId() > 0) {
+                requestInfo.put("id", String.valueOf(body.getTaskId()));
+            } else {
+                return BaseResponse.error("任务号ID不能为零");
+            }
+            // 更新调度任务
+            XxlJobResponse xxlJobResponse = XxlJobUtil.updateJob(adminAddresses, requestInfo);
+            XxlJobResponse startJob = XxlJobUtil.startJob(adminAddresses, body.getTaskId());
+            if (xxlJobResponse.getCode() == 200 && startJob.getCode() == 200) {
+
+            } else {
+                return BaseResponse.error(xxlJobResponse.getMsg() + ";" + startJob.getMsg());
+            }
+        }
+
+        // 更新数据内容
+        labelMapper.updateById(new Label(body));
+        linkService.remove(new QueryWrapper<Link>().lambda().eq(Link::getLabelId, body.getLid()));
+        imgUrlService.remove(new QueryWrapper<ImgUrl>().lambda().eq(ImgUrl::getLabelId, body.getLid()));
+        this.updateLinkAndImgUrl(body);
+        return BaseResponse.ok(true);
     }
 
     @Override
@@ -265,6 +334,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
                     }
                     return BaseResponse.ok(labelMapper.getById(body.getLid()));
                 } else {
+
                     return BaseResponse.error(xxlJobResponse.getMsg());
                 }
             } catch (Exception e) {
@@ -302,7 +372,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
 //            escapeParams = String.format("%s&%s", "spider="+paramMap.get("spider"), URLUtil.encode("msg="+paramMap.get("msg")));
 //            reverseEscapeParams = String.format("%s&%s", URLUtil.encode("msg="+paramMap.get("msg")), "spider="+paramMap.get("spider"));
 //            reverseParams = String.format("%s&%s", "msg="+paramMap.get("msg"), "spider="+paramMap.get("spider"));
-            labels = baseMapper.selectList(new LambdaQueryWrapper<Label>().like(Label::getParam, "spider="+paramMap.get("spider")));
+            labels = baseMapper.selectList(new LambdaQueryWrapper<Label>().like(Label::getParam, "spider=" + paramMap.get("spider")));
         }
         // 查询label表获取到维护人的id
 //        labels = baseMapper.selectList(new LambdaQueryWrapper<Label>().likeRight(Label::getParam, params).
@@ -389,5 +459,39 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
         return requestInfo;
     }
 
+    public void setExecutorId(InsertBody body) throws IOException {
+        ExecutorList executorList = XxlJobUtil.executorList(adminAddresses);
+        List<ExecutorList.DataBean> executor = executorList.getData();
+        for (ExecutorList.DataBean data : executor) {
+            data.toString();
+            if (data.getAppname().equals("spider-executor")) {
+                body.setExecutorId(data.getId());
+                log.info("在线执行器id为：" + data.getId());
+                break;
+            }
+        }
+    }
 
+    public void updateLinkAndImgUrl(InsertBody body) {
+        ArrayList<Link> linkList = new ArrayList<>();
+        ArrayList<ImgUrl> imgList = new ArrayList<>();
+        ImgUrlCache imgUrlCache = ImgUrlCache.getInstance();
+        if (body.getSpiderLink().size() > 0) {
+            for (int i = 0; i < body.getSpiderLink().size(); i++) {
+                linkList.add(new Link(body.getLid(), body.getSpiderLink().get(i)));
+            }
+            linkService.saveOrUpdateBatch(linkList);
+        }
+        if (body.getImg().size() > 0) {
+            for (int i = 0; i < body.getImg().size(); i++) {
+                String path = imgUrlCache.getElement(body.getImg().get(i));
+                if (StringUtils.isNotBlank(path)) {
+                    imgList.add(new ImgUrl(body.getLid(), body.getImg().get(i), path));
+                }
+            }
+            if (!imgList.isEmpty()) {
+                imgUrlService.saveOrUpdateBatch(imgList);
+            }
+        }
+    }
 }

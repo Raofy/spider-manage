@@ -77,9 +77,9 @@
 
     <insert id="addElement" useGeneratedKeys="true" keyProperty="lid" keyColumn="id">
         insert into
-        label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution, executor_id, server_id, path, creator_id, updater_id)
+        label(category_id, label_name, time_desc, demand_desc, spider_id, param, cron, auto_distribution, executor_id, server_id, path, creator_id, updater_id, task_id)
         values
-        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution}, #{body.executorId}, #{body.serverId}, #{body.path}, #{body.creatorId}, #{body.updaterId})
+        (#{body.gid},#{body.labelName},#{body.timeDesc},#{body.demandDesc},#{body.spiderId},#{body.param},#{body.cron},#{body.autoDistribution}, #{body.executorId}, #{body.serverId}, #{body.path}, #{body.creatorId}, #{body.updaterId}, #{body.taskId})
 
     </insert>
 

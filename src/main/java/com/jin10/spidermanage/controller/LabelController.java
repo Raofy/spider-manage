@@ -71,16 +71,18 @@ public class LabelController {
             log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return labelService.add(body);
+//        return labelService.add(body);
+        return labelService.insertElement(body);
     }
 
     @PostMapping("/update")
-    public BaseResponse update(@Valid @RequestBody InsertBody body, BindingResult result) {
+    public BaseResponse update(@Valid @RequestBody InsertBody body, BindingResult result) throws IOException {
         if (result.hasErrors()) {
             log.error("参数校验异常！ ==> {}", Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             return BaseResponse.error(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return labelService.updateLabel(body);
+//        return labelService.updateLabel(body);
+        return labelService.updateElement(body);
     }
 
     /**

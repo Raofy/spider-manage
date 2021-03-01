@@ -129,18 +129,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, com.jin10.s
         return StringUtils.join(ids, ",");
     }
 
-    public int getDirectoryId(List<Category> list, int id) {
-        int flag = 0;
-        for (Category item : list) {
-            if (item.getId() == id && item.getParentId() == 0) {
-                return (int) item.getParentId();
-            } else if (item.getId() == id && item.getParentId() > 0) {
-                flag = (int) item.getParentId();
-            }
-        }
-        return getDirectoryId(list, flag);
-    }
-
     /**
      * 递归获取子目录
      *
